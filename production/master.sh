@@ -80,12 +80,4 @@ kubectl create secret generic regcred \
     --from-file=.dockerconfigjson=/root/.docker/config.json \
     --type=kubernetes.io/dockerconfigjson
 
-cd ../manifests
-while ! kustomize build example | kubectl apply -f -; do
-    echo "Retrying to apply resources"
-    sleep 20
-done
-
-kubectl port-forward --address 0.0.0.0 svc/istio-ingressgateway -n istio-system 8080:80
-# Done!
-# navigate to http://localhost:8080 user@example.com 12341234
+bash ./kubeflow/kubeflow.sh
