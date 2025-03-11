@@ -7,6 +7,7 @@ kubeadm token create --print-join-command
 
 kubectl get pods -A --field-selector spec.nodeName=worker-g01
 
+# delete kubeflow
 kustomize build example | kubectl delete --ignore-not-found --server-side --force-conflicts -f -
 kubectl delete namespace auth cert-manager istio-system knative-serving kubeflow kubeflow-user-example-com oauth2-proxy knative-eventing --force --grace-period=0
 kubectl get namespace auth cert-manager istio-system knative-serving kubeflow kubeflow-user-example-com oauth2-proxy knative-eventing -o json | jq '.spec.finalizers = []' | kubectl replace --raw "/api/v1/namespaces/<namespace>/finalize" -f -
@@ -28,3 +29,13 @@ kubectl delete mutatingwebhookconfigurations \
 kubectl delete validatingwebhookconfigurations \
     $(kubectl get validatingwebhookconfigurations | grep -E 'istio|kubeflow|cert-manager' | awk '{print $1}')
 kubectl delete clusterrolebinding meta-controller-cluster-role-binding
+
+
+# list disks
+lsblk
+
+
+kubectl patch deployment openebs-localpv-provisioner -n openebs --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/env/4/value", "value": "/data1"}]'
+
+helm install openebs --namespace openebs openebs/openebs --set engines.replicated.mayastor.enabled=false --create-namespace
+helm install openebs openebs/openebs --set ndm.enabled=true --namespace openebs --create-namespace

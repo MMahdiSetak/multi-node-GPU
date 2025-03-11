@@ -33,8 +33,12 @@ def stress_test_large_model():
     # Perform inference as a stress test
     print("Running inference...")
     start_time = time.time()
+    num_iterations = 100  # Run multiple iterations to sustain load
+
     with torch.no_grad():
-        output = model(dummy_input)
+        for _ in range(num_iterations):
+            output = model(dummy_input)
+    
     end_time = time.time()
 
     # Print results
