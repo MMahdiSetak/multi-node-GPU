@@ -33,6 +33,6 @@ sudo systemctl stop firewalld
 sudo systemctl disable firewalld
 sudo systemctl status firewalld
 
-sudo bash ../prerequisites/docker.sh
+# sudo bash ../prerequisites/docker.sh
 sudo bash ../prerequisites/containerd.sh
-sudo bash ../prerequisites/kubeadm.sh
+sudo bash ../prerequisites/kubernetes.sh
