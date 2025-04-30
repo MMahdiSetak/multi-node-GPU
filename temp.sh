@@ -3,6 +3,11 @@ curl -k -v -X POST \
     -d "kerio_username=user-1696%40isiranco.internet&kerio_password=2wsx3edc%40WSX%23EDC" \
     https://192.168.10.2:4081/internal/dologin.php
 
+curl -k -v -X POST \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    -d "kerio_username=user-1696&kerio_password=4rfv5tgb%24RFV%25TGB" \
+    https://192.168.10.2:4081/internal/dologin.php
+
 kubeadm token create --print-join-command
 
 kubectl get pods -A --field-selector spec.nodeName=worker-g01
@@ -31,11 +36,12 @@ kubectl delete validatingwebhookconfigurations \
 kubectl delete clusterrolebinding meta-controller-cluster-role-binding
 
 
-# list disks
-lsblk
-
-
-kubectl patch deployment openebs-localpv-provisioner -n openebs --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/env/4/value", "value": "/data1"}]'
-
-helm install openebs --namespace openebs openebs/openebs --set engines.replicated.mayastor.enabled=false --create-namespace
-helm install openebs openebs/openebs --set ndm.enabled=true --namespace openebs --create-namespace
+echo "Waiting for SSH on 192.168.20.140..."
+until ssh -o BatchMode=yes \
+         -o ConnectTimeout=5 \
+         -o StrictHostKeyChecking=no \
+         "aiirib@192.168.20.140" exit
+do
+  echo "  ⏳ SSH not ready yet – retrying in 5s…"
+  sleep 5
+done

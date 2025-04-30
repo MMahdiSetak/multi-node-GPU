@@ -1959,3 +1959,4 @@ manifests/tests/gh-actions/kf-objects/katib_test.yaml
 manifests/tests/gh-actions/kf-objects/kserve_test.yaml
 manifests/tests/gh-actions/kf-objects/test_pipeline.py
 manifests/tests/gh-actions/kf-objects/tfjob.yaml
+production/kubeflow/irib.sh
