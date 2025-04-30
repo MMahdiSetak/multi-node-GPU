@@ -2,17 +2,18 @@ helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 helm install grafana grafana/grafana
 
-
-kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode
+echo
 9YBCLevyKlV4gddV42VjQlTF8xT4j5bTymwf1Dgi
 
 kubectl port-forward service/grafana 3000:80
 #https://github.com/dotdc/grafana-dashboards-kubernetes
+#https://grafana.com/grafana/dashboards/18288-nvidia-gpu/
+#12239
 # NOTES:
 # 1. Get your 'admin' user password by running:
 
 #    kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
-
 
 # 2. The Grafana server can be accessed via port 80 on the following DNS name from within your cluster:
 
@@ -27,5 +28,3 @@ kubectl port-forward service/grafana 3000:80
 # ######   WARNING: Persistence is disabled!!! You will lose your data when   #####
 # ######            the Grafana pod is terminated.                            #####
 # #################################################################################
-
-

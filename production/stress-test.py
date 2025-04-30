@@ -22,7 +22,7 @@ def stress_test_large_model():
 
     # Load a large pre-trained model (e.g., ResNet50)
     print("Loading ResNet50 model...")
-    model = models.resnet50(pretrained=True)
+    model = models.resnet50(weights=None)
     model = model.to(device)
     model.eval()  # Set model to evaluation mode
 
@@ -33,7 +33,7 @@ def stress_test_large_model():
     # Perform inference as a stress test
     print("Running inference...")
     start_time = time.time()
-    num_iterations = 100  # Run multiple iterations to sustain load
+    num_iterations = 2000  # Run multiple iterations to sustain load
 
     with torch.no_grad():
         for _ in range(num_iterations):

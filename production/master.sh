@@ -9,7 +9,7 @@ hostnamectl set-hostname master
 
 sudo reboot
 
-sudo kubeadm init --kubernetes-version=v1.32.0 --control-plane-endpoint=master
+sudo kubeadm init --kubernetes-version=v1.33.0 --control-plane-endpoint=master
 ####### save this information #######
 #You can now join any number of control-plane nodes by copying certificate authorities
 #and service account keys on each node and then running the following as root:
@@ -34,9 +34,9 @@ if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
 curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
 sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
 sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
-rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+rm -f cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
 
-cilium install --version 1.16.6
+cilium install --version 1.17.2
 cilium status --wait
 cilium connectivity test
 
@@ -46,6 +46,7 @@ sudo systemctl restart containerd
 
 # kubectl label node master node-role.kubernetes.io/control-plane=control-plane
 kubectl label node worker-g01 node-role.kubernetes.io/worker=worker
+# kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
 # Add kubernetes-dashboard repository
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
