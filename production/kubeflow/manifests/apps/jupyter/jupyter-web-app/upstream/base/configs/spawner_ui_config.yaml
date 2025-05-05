@@ -133,10 +133,22 @@ spawnerFormDefaults:
       vendors:
       - limitsKey: "nvidia.com/gpu"
         uiName: "NVIDIA"
-      - limitsKey: "amd.com/gpu"
-        uiName: "AMD"
-      - limitsKey: "habana.ai/gaudi"
-        uiName: "Intel Gaudi"
+      - limitsKey: "nvidia.com/mig-1g.10gb"
+        uiName: "MIG 1g 10gb"
+      - limitsKey: "nvidia.com/mig-1g.12gb"
+        uiName: "MIG 1g 12gb"
+      - limitsKey: "nvidia.com/mig-2g.20gb"
+        uiName: "MIG 2g 20gb"
+      - limitsKey: "nvidia.com/mig-2g.24gb"
+        uiName: "MIG 2g 24gb"
+      - limitsKey: "nvidia.com/mig-3g.40gb"
+        uiName: "MIG 3g 40gb"
+      - limitsKey: "nvidia.com/mig-3g.47gb"
+        uiName: "MIG 3g 47gb"
+      # - limitsKey: "amd.com/gpu"
+      #   uiName: "AMD"
+      # - limitsKey: "habana.ai/gaudi"
+      #   uiName: "Intel Gaudi"
 
       # the default value of the limit
       # (possible values: "none", "1", "2", "4", "8")
