@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/instance: k8s
     app.kubernetes.io/name: prometheus
     app.kubernetes.io/part-of: kube-prometheus
-    app.kubernetes.io/version: 2.54.1
+    app.kubernetes.io/version: 3.3.1
   name: prometheus-k8s
   namespace: monitoring
 spec:
@@ -19,8 +19,6 @@ spec:
           app.kubernetes.io/name: prometheus
     ports:
     - port: 9090
-      protocol: TCP
-    - port: 8080
       protocol: TCP
   - from:
     - podSelector:
