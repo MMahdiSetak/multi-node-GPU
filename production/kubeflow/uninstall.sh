@@ -5,17 +5,17 @@ kubectl get all,ingress,pvc,secrets,serviceaccounts,roles,clusterroles,clusterro
 kubectl get clusterroles |
     grep -E 'kubeflow|istio|knative|cert-manager' |
     awk '{print $1}' |
-    xargs -I {} kubectl delete clusterrole {}
+    xargs -I {} kubectl delete --ignore-not-found --force clusterrole {}
 kubectl get clusterrolebindings |
     grep -E 'kubeflow|istio|knative|cert-manager' |
     awk '{print $1}' |
-    xargs -I {} kubectl delete clusterrolebinding {}
+    xargs -I {} kubectl delete --ignore-not-found --force clusterrolebinding {}
 kubectl get crd |
     grep -E 'kubeflow.org|istio.io|knative.dev|serving.kubeflow.org|cert-manager' |
     awk '{print $1}' |
-    xargs kubectl delete crd --force --grace-period=0
-kubectl delete mutatingwebhookconfigurations \
+    xargs kubectl delete crd --ignore-not-found --force --grace-period=0
+kubectl delete --ignore-not-found --force mutatingwebhookconfigurations \
     $(kubectl get mutatingwebhookconfigurations | grep -E 'istio|kubeflow|cert-manager' | awk '{print $1}')
-kubectl delete validatingwebhookconfigurations \
+kubectl delete --ignore-not-found --force validatingwebhookconfigurations \
     $(kubectl get validatingwebhookconfigurations | grep -E 'istio|kubeflow|cert-manager' | awk '{print $1}')
-kubectl delete clusterrolebinding meta-controller-cluster-role-binding
+kubectl delete --ignore-not-found --force clusterrolebinding meta-controller-cluster-role-binding
