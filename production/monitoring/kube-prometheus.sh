@@ -1,4 +1,5 @@
 kubectl apply --server-side -f manifests/setup
+#kubectl apply --server-side -f manifests/openebs-addons
 kubectl wait \
 	--for condition=Established \
 	--all CustomResourceDefinition \
