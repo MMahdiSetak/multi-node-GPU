@@ -57,3 +57,8 @@ kubectl describe pv pvc-bbefbc90-80a4-4138-911f-4c4a103cd61a
 
 # use the k8s namespace if your node’s containerd is namespaced
 sudo ctr images pull quay.io/prometheus-operator/prometheus-operator:v0.82.1
+
+
+
+dnf config-manager --set-disabled cuda-rhel9-x86_64
+dnf config-manager --set-disabled docker-ce-stable

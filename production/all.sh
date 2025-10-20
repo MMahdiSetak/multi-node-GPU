@@ -24,10 +24,14 @@ EOF
 sudo sysctl --system
 
 cat <<EOF | sudo tee -a /etc/hosts
-192.168.20.73 master
-192.168.20.74 worker-s01
-192.168.20.139 worker-g01
+172.16.30.21 master
+172.16.30.22 worker-s01
+172.16.30.23 worker-s02
+172.16.30.24 worker-g01
+172.16.30.25 worker-g02
 EOF
+
+hostnamectl set-hostname master
 
 sudo systemctl stop firewalld
 sudo systemctl disable firewalld

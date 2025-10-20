@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
+#dnf install httpd-tools
 usage() {
     cat <<EOF >&2
 Usage: $0 -u USERNAME -e EMAIL -p PASSWORD

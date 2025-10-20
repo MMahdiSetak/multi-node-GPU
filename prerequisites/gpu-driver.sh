@@ -3,8 +3,8 @@ sudo dnf install -y epel-release
 # dnf install kernel-devel-matched kernel-headers
 sudo dnf install -y dkms kernel-devel-$(uname -r)
 sudo dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
-sudo dnf module reset nvidia-driver
-sudo dnf module enable nvidia-driver:565-dkms
+sudo dnf module reset -y nvidia-driver
+sudo dnf module enable -y nvidia-driver:575-dkms
 sudo dnf module install -y nvidia-driver
 sudo reboot
 

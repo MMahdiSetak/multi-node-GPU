@@ -60,3 +60,18 @@ spec:
     requests:
       storage: 4Gi
 EOF
+
+
+# hugepage
+# Check current
+grep HugePages /proc/meminfo
+
+# Allocate 1024 pages now
+echo 1024 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+
+# Persist across reboot
+echo 'vm.nr_hugepages = 1024' >> /etc/sysctl.conf
+sysctl -p
+
+# IMPORTANT: restart kubelet (or reboot) so Kubernetes sees the new count
+systemctl restart kubelet

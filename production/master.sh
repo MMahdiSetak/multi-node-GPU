@@ -1,5 +1,6 @@
 bash all.sh
 bash ../prerequisites/helm.sh
+dnf install httpd-tools
 
 hostnamectl set-hostname master
 
@@ -9,7 +10,7 @@ hostnamectl set-hostname master
 
 sudo reboot
 
-sudo kubeadm init --kubernetes-version=v1.33.0 --control-plane-endpoint=master
+sudo kubeadm init --kubernetes-version=v1.34.1 --control-plane-endpoint=master
 ####### save this information #######
 #You can now join any number of control-plane nodes by copying certificate authorities
 #and service account keys on each node and then running the following as root:
@@ -23,6 +24,9 @@ sudo kubeadm init --kubernetes-version=v1.33.0 --control-plane-endpoint=master
 #kubeadm join master:6443 --token aot61h.ni1j9wpjdx8m8umc \
 #    --discovery-token-ca-cert-hash sha256:7fb206b4d47aa48e4a76fc0ef9ca338f2911fe1e759fef466a40db9b9feb23d1
 #####################################
+
+sudo nano /var/lib/kubelet/config.yaml
+failSwapOn: false
 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config

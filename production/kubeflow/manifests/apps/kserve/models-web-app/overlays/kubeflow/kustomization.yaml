@@ -20,6 +20,7 @@ configMapGenerator:
   literals:
   - USERID_HEADER=kubeflow-userid
   - APP_PREFIX=/kserve-endpoints
+  - APP_SECURE_COOKIES=false
   name: kserve-models-web-app-config
 
 configurations:

@@ -11,9 +11,23 @@ kubectl -n istio-system port-forward --address 0.0.0.0 svc/istio-ingressgateway 
 kubectl -n istio-system patch svc istio-ingressgateway \
     --type='merge' \
     -p '{"spec": {"type": "NodePort"}}'
+# kubectl -n istio-system get service istio-ingressgateway
 
+#CSRF issue:
+# kubectl edit deploy jupyter-web-app-deployment -n kubeflow
+# - name: APP_SECURE_COOKIES
+#   value: "false"
 kubectl -n kubeflow set env deployment jupyter-web-app-deployment APP_SECURE_COOKIES=false
 kubectl -n kubeflow set env deployment volumes-web-app-deployment APP_SECURE_COOKIES=false
 
 kubectl -n kubeflow rollout restart deployment jupyter-web-app-deployment
 kubectl -n kubeflow rollout restart deployment volumes-web-app-deployment
+
+
+# these changes:
+kubectl edit cm cilium-config -n kube-system
+
+# cni-exclusive: "false" -> was true 
+
+# bpf-lb-sock-hostns-only: "true"  # Or socket-lb-host-ns-only: "true" depending on version
+# bpf-lb-sock was false -> changed to true

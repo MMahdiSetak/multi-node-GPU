@@ -14,15 +14,43 @@ data:
           mig-enabled: false
 
       pcie-nvl:
+        - devices: [0]
+          mig-enabled: false
         - devices: [1]
           mig-enabled: false
-
-        - devices: [0]
+        - devices: [2]
+          mig-enabled: false
+        - devices: [3]
+          mig-enabled: false
+        - devices: [4]
           mig-enabled: true
           mig-devices:
-            "3g.47gb": 1
-            "2g.24gb": 1
-            "1g.12gb": 1
+            "3g.40gb": 1
+            "2g.20gb": 1
+            "1g.10gb": 1
+EOF
+
+
+cat <<EOF | kubectl apply -n gpu-operator -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-mig-config
+data:
+  config.yaml: |
+    version: v1
+    mig-configs:
+      all-disabled:
+        - devices: all
+          mig-enabled: false
+
+      pcie-nvl:
+        - devices: [4]
+          mig-enabled: true
+          mig-devices:
+            "4g.40gb": 1
+            "2g.20gb": 1
+            "1g.10gb": 1
 EOF
 
 cat <<EOF | kubectl apply -n gpu-operator -f -
@@ -57,3 +85,29 @@ kubectl patch clusterpolicies.nvidia.com/cluster-policy \
 kubectl label nodes master nvidia.com/mig.config=all-enable --overwrite
 
 kubectl logs -n gpu-operator -l app=nvidia-mig-manager -c nvidia-mig-manager
+
+kubectl label nodes worker-g01 nvidia.com/mig.config=pcie --overwrite
+# pcie-nvl
+kubectl label nodes worker-g01 nvidia.com/mig.config=all-disabled --overwrite
+
+cat <<EOF | kubectl apply -n gpu-operator -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-mig-config
+data:
+  config.yaml: |
+    version: v1
+    mig-configs:
+      all-disabled:
+        - devices: all
+          mig-enabled: false
+
+      pcie:
+        - devices: [0]
+          mig-enabled: false
+        - devices: [1]
+          mig-enabled: true
+          mig-devices:
+            "1g.10gb": 7
+EOF

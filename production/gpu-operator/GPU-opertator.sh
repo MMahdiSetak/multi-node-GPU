@@ -6,7 +6,7 @@ helm repo add nvidia https://helm.ngc.nvidia.com/nvidia &&
   helm repo update
 helm search repo nvidia
 
-helm install gpu-operator nvidia/gpu-operator -n gpu-operator --create-namespace --version=v25.3.0 --set driver.enabled=false --wait
+helm install gpu-operator nvidia/gpu-operator -n gpu-operator --create-namespace --version=v25.3.3 --set driver.enabled=false --wait
 helm upgrade gpu-operator nvidia/gpu-operator -n gpu-operator --set driver.enabled=true --set mig.strategy=single
 # driver.version=570.86.15
 # driver.useOpenKernelModules=true
@@ -37,6 +37,8 @@ spec:
     interval: 5s
     path: /metrics
 EOF
+
+## delete and cleanup:
 
 helm list -A
 helm uninstall gpu-operator -n gpu-operator
