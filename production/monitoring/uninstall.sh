@@ -1,1 +1,1 @@
-kubectl delete --ignore-not-found=true -f ../monitoring/manifests/ -f ../monitoring/manifests/setup
+kubectl delete --ignore-not-found --force -f ../monitoring/manifests/ -f ../monitoring/manifests/setup
