@@ -1,10 +1,4 @@
-#!/bin/bash
-
-# Retry loop for manifest deletion (handles transient termination delays)
-while ! kustomize build ../kubeflow/manifests/example | kubectl delete --ignore-not-found --force --grace-period=0 -f -; do
-  echo "Retrying manifest deletion..."
-  sleep 10
-done
+kustomize build ../kubeflow/manifests/example | kubectl delete --ignore-not-found --force -f -
 
 # Scale down Profiles controller to prevent reconciliation
 kubectl -n kubeflow scale deployment profiles-deployment --replicas=0 || true
@@ -25,49 +19,34 @@ kubectl delete profiles.kubeflow.org --all --all-namespaces --force --grace-peri
 # Patch finalizers on Profiles CRD (if stuck)
 kubectl patch crd profiles.kubeflow.org -p '{"metadata":{"finalizers":null}}' --type=merge || true
 
-# Delete namespaces (with finalizer patching for safety)
-for ns in auth cert-manager istio-system knative-serving kubeflow kubeflow-user-example-com oauth2-proxy knative-eventing; do
-  kubectl patch ns $ns -p '{"metadata":{"finalizers":null}}' --type=merge || true
-  kubectl delete --ignore-not-found --force --grace-period=0 namespace $ns || true
-done
+kubectl delete --ignore-not-found --force --grace-period=0 namespace auth cert-manager istio-system knative-serving kubeflow kubeflow-user-example-com oauth2-proxy knative-eventing
 
-# Delete profile-related user namespaces (with finalizer patching)
-for ns in $(kubectl get namespace | grep -E '\-profile' | awk '{print $1}' 2>/dev/null); do
-  kubectl patch ns $ns -p '{"metadata":{"finalizers":null}}' --type=merge || true
-  kubectl delete ns $ns --ignore-not-found --force --grace-period=0 || true
-done
-
-# Delete ClusterRoles
 kubectl get clusterroles |
     grep -E 'kubeflow|istio|knative|cert-manager' |
     awk '{print $1}' |
-    xargs -I {} kubectl delete --ignore-not-found --force --grace-period=0 clusterrole {} || true
+    xargs -I {} kubectl delete --ignore-not-found --force clusterrole {}
 
-# Delete ClusterRoleBindings
 kubectl get clusterrolebindings |
     grep -E 'kubeflow|istio|knative|cert-manager' |
     awk '{print $1}' |
-    xargs -I {} kubectl delete --ignore-not-found --force --grace-period=0 clusterrolebinding {} || true
+    xargs -I {} kubectl delete --ignore-not-found --force clusterrolebinding {}
 
-# Delete CRDs (with finalizer patching for common stuck ones)
-for crd in $(kubectl get crd | grep -E 'kubeflow.org|istio.io|knative.dev|serving.kubeflow.org|cert-manager' | awk '{print $1}' 2>/dev/null); do
-  kubectl patch crd $crd -p '{"metadata":{"finalizers":null}}' --type=merge || true
-done
+kubectl delete profiles.kubeflow.org --all --all-namespaces --force --grace-period=0
+
+kubectl get namespace |
+    grep -E '\-profile' |
+    awk '{print $1}' |
+    xargs kubectl delete ns --ignore-not-found --force --grace-period=0
+
 kubectl get crd |
     grep -E 'kubeflow.org|istio.io|knative.dev|serving.kubeflow.org|cert-manager' |
     awk '{print $1}' |
-    xargs kubectl delete crd --ignore-not-found --force --grace-period=0 || true
+    xargs kubectl delete crd --ignore-not-found --force --grace-period=0
 
-# Delete MutatingWebhooks
-kubectl delete --ignore-not-found --force --grace-period=0 mutatingwebhookconfigurations \
-    $(kubectl get mutatingwebhookconfigurations | grep -E 'istio|kubeflow|cert-manager' | awk '{print $1}' 2>/dev/null) || true
+kubectl delete --ignore-not-found --force mutatingwebhookconfigurations \
+    $(kubectl get mutatingwebhookconfigurations | grep -E 'istio|kubeflow|cert-manager' | awk '{print $1}')
 
-# Delete ValidatingWebhooks
-kubectl delete --ignore-not-found --force --grace-period=0 validatingwebhookconfigurations \
-    $(kubectl get validatingwebhookconfigurations | grep -E 'istio|kubeflow|cert-manager' | awk '{print $1}' 2>/dev/null) || true
+kubectl delete --ignore-not-found --force validatingwebhookconfigurations \
+    $(kubectl get validatingwebhookconfigurations | grep -E 'istio|kubeflow|cert-manager' | awk '{print $1}')
 
-# Delete specific binding
-kubectl delete --ignore-not-found --force --grace-period=0 clusterrolebinding meta-controller-cluster-role-binding || true
-
-# Final verification (optional, but run manually after)
-kubectl get all --all-namespaces | grep -E 'kubeflow|istio|knative|cert-manager' || echo "No remaining resources found."
+kubectl delete --ignore-not-found --force clusterrolebinding meta-controller-cluster-role-binding
