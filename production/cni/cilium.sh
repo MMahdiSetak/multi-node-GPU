@@ -9,3 +9,24 @@ rm -f cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
 cilium install --version 1.17.2
 cilium status --wait
 cilium connectivity test
+
+
+#### modifications:
+
+kubectl edit configmap cilium-config -n kube-system
+
+#enable-node-port: "true"
+enable-l2-announcements: "true"
+kube-proxy-replacement: "true"
+k8s-client-qps: "200"
+k8s-client-burst: "300"
+
+
+routing-mode: "native"
+tunnel-protocol: "" # vxlan 
+ipv4-native-routing-cidr: "10.0.0.0/8"  # Your cluster-pool-ipv4-cidr
+auto-direct-node-routes: "true"
+
+
+
+kubectl -n kube-system rollout restart ds cilium
