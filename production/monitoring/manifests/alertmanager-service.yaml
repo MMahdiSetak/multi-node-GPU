@@ -12,13 +12,15 @@ metadata:
 spec:
   ports:
   - name: web
-    nodePort: 30903
     port: 9093
     targetPort: web
+  - name: reloader-web
+    port: 8080
+    targetPort: reloader-web
   selector:
     app.kubernetes.io/component: alert-router
     app.kubernetes.io/instance: main
     app.kubernetes.io/name: alertmanager
     app.kubernetes.io/part-of: kube-prometheus
   sessionAffinity: ClientIP
-  type: NodePort
+  type: LoadBalancer

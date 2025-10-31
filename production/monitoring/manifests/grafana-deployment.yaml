@@ -29,7 +29,12 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-      - env: []
+      - env:
+        - name: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: client_secret
+              name: grafana-oauth-secret
         image: grafana/grafana:12.0.0
         name: grafana
         ports:
@@ -66,6 +71,9 @@ spec:
           readOnly: false
         - mountPath: /tmp
           name: tmp-plugins
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/GPU-dashboard
+          name: grafana-dashboard-GPU-dashboard
           readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/alertmanager-overview
           name: grafana-dashboard-alertmanager-overview
@@ -186,6 +194,9 @@ spec:
       - emptyDir:
           medium: Memory
         name: tmp-plugins
+      - configMap:
+          name: grafana-dashboard-GPU-dashboard
+        name: grafana-dashboard-GPU-dashboard
       - configMap:
           name: grafana-dashboard-alertmanager-overview
         name: grafana-dashboard-alertmanager-overview

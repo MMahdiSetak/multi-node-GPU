@@ -20,6 +20,8 @@ spec:
     ports:
     - port: 9090
       protocol: TCP
+    - port: 8080
+      protocol: TCP
   - from:
     - podSelector:
         matchLabels:
