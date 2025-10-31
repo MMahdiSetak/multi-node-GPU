@@ -72,9 +72,6 @@ spec:
         - mountPath: /tmp
           name: tmp-plugins
           readOnly: false
-        - mountPath: /grafana-dashboard-definitions/0/GPU-dashboard
-          name: grafana-dashboard-GPU-dashboard
-          readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/alertmanager-overview
           name: grafana-dashboard-alertmanager-overview
           readOnly: false
@@ -86,6 +83,9 @@ spec:
           readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/controller-manager
           name: grafana-dashboard-controller-manager
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0/gpu-dashboard
+          name: grafana-dashboard-gpu-dashboard
           readOnly: false
         - mountPath: /grafana-dashboard-definitions/0/grafana-overview
           name: grafana-dashboard-grafana-overview
@@ -195,9 +195,6 @@ spec:
           medium: Memory
         name: tmp-plugins
       - configMap:
-          name: grafana-dashboard-GPU-dashboard
-        name: grafana-dashboard-GPU-dashboard
-      - configMap:
           name: grafana-dashboard-alertmanager-overview
         name: grafana-dashboard-alertmanager-overview
       - configMap:
@@ -209,6 +206,9 @@ spec:
       - configMap:
           name: grafana-dashboard-controller-manager
         name: grafana-dashboard-controller-manager
+      - configMap:
+          name: grafana-dashboard-gpu-dashboard
+        name: grafana-dashboard-gpu-dashboard
       - configMap:
           name: grafana-dashboard-grafana-overview
         name: grafana-dashboard-grafana-overview
