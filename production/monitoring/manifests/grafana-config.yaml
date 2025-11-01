@@ -16,21 +16,24 @@ stringData:
     allow_sign_up = true
     api_url = http://172.16.30.103/auth/realms/infra/protocol/openid-connect/userinfo
     auth_url = http://172.16.30.103/auth/realms/infra/protocol/openid-connect/auth
+    auto_login = false
     client_id = grafana
     client_secret = $GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
     email_attribute_path = email
     enabled = true
     icon = signin
     login_attribute_path = username
+    login_prompt = login
     name = Keycloak
     name_attribute_path = full_name
     role_attribute_path = contains(realm_access.roles[*], 'admin') && 'Admin' || 'Viewer'
     scopes = openid email profile
+    signout_redirect_url = http://172.16.30.103/realms/infra/protocol/openid-connect/logout
     tls_skip_verify_insecure = true
     token_url = http://172.16.30.103/auth/realms/infra/protocol/openid-connect/token
     use_refresh_token = true
     [date_formats]
-    default_timezone = UTC
+    default_timezone = Asia/Tehran
     [server]
     root_url = http://172.16.30.101
 type: Opaque
