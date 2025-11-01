@@ -16,7 +16,6 @@ stringData:
     allow_sign_up = true
     api_url = http://keycloak.keycloak.svc.cluster.local/auth/realms/infra/protocol/openid-connect/userinfo
     auth_url = http://172.16.30.103/auth/realms/infra/protocol/openid-connect/auth
-    auto_login = false
     client_id = grafana
     client_secret = $GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
     email_attribute_path = email
@@ -25,9 +24,8 @@ stringData:
     login_attribute_path = username
     name = Keycloak
     name_attribute_path = full_name
-    role_attribute_path = contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'
-    scopes = openid email profile offline_access roles
-    signout_redirect_url = http://172.16.30.103/realms/infra/protocol/openid-connect/logout
+    role_attribute_path = contains(realm_access.roles[*], 'admin') && 'Admin' || 'Viewer'
+    scopes = openid email profile
     tls_skip_verify_insecure = true
     token_url = http://keycloak.keycloak.svc.cluster.local/auth/realms/infra/protocol/openid-connect/token
     use_refresh_token = true

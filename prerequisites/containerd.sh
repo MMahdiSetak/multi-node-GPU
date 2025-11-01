@@ -10,6 +10,10 @@ systemctl enable containerd
 systemctl restart containerd
 systemctl status containerd
 
+
+# test for connection:
+ctr image pull registry.k8s.io/pause:3.8
+
 #### new way:
 # https://github.com/containerd/containerd/blob/main/docs/getting-started.md
 

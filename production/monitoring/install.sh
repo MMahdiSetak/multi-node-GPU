@@ -38,3 +38,6 @@ spec:
     interval: 5s
     path: /metrics
 EOF
+
+
+kubectl delete NetworkPolicy grafana -n monitoring
