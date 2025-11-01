@@ -32,6 +32,5 @@ stringData:
     [date_formats]
     default_timezone = UTC
     [server]
-    domain = 172.16.30.101
-    http_port = 80
+    root_url = http://172.16.30.101
 type: Opaque
