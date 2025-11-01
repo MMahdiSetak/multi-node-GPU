@@ -31,4 +31,7 @@ stringData:
     use_refresh_token = true
     [date_formats]
     default_timezone = UTC
+    [server]
+    domain = 172.16.30.101
+    http_port = 80
 type: Opaque
