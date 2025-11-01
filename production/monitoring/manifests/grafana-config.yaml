@@ -28,7 +28,7 @@ stringData:
     name_attribute_path = full_name
     role_attribute_path = contains(realm_access.roles[*], 'admin') && 'Admin' || 'Viewer'
     scopes = openid email profile
-    signout_redirect_url = http://172.16.30.103/realms/infra/protocol/openid-connect/logout
+    signout_redirect_url = http://172.16.30.103/auth/realms/infra/protocol/openid-connect/logout
     tls_skip_verify_insecure = true
     token_url = http://172.16.30.103/auth/realms/infra/protocol/openid-connect/token
     use_refresh_token = true
