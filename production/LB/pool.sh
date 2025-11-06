@@ -37,6 +37,8 @@ kubectl edit svc -n monitoring prometheus-k8s
 type: LoadBalancer
 externalTrafficPolicy: Cluster
 
+kubectl patch svc istio-ingressgateway -n istio-system --patch '{"spec":{"type":"LoadBalancer"}}'
+
 
 kubectl edit clusterrole cilium
 - apiGroups:

@@ -31,3 +31,12 @@ kubectl edit cm cilium-config -n kube-system
 
 # bpf-lb-sock-hostns-only: "true"  # Or socket-lb-host-ns-only: "true" depending on version
 # bpf-lb-sock was false -> changed to true
+
+
+
+
+kubectl edit deployment centraldashboard -n kubeflow
+spec.template.spec.containers
+env:
+- name: CD_REGISTRATION_FLOW
+  value: "true"

@@ -21,11 +21,16 @@ kube-proxy-replacement: "true"
 k8s-client-qps: "200"
 k8s-client-burst: "300"
 
+# for istio compatibility:
+cni-exclusive: "false"
+bpf-lb-sock-hostns-only: "true"
+# socketLB.hostNamespaceOnly: "true"
 
-routing-mode: "native"
-tunnel-protocol: "" # vxlan 
-ipv4-native-routing-cidr: "10.0.0.0/8"  # Your cluster-pool-ipv4-cidr
-auto-direct-node-routes: "true"
+
+# routing-mode: "native"
+# tunnel-protocol: "" # vxlan 
+# ipv4-native-routing-cidr: "10.0.0.0/8"  # Your cluster-pool-ipv4-cidr
+# auto-direct-node-routes: "true"
 
 
 
