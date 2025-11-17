@@ -1,0 +1,1 @@
+git clone --single-branch --branch v1.18.7 https://github.com/rook/rook.git
