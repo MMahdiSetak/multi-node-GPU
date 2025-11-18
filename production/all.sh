@@ -2,15 +2,14 @@
 sudo sed -i '/\sswap\s/s/^/#/' /etc/fstab
 sudo swapoff -a
 
-# Set SELinux in permissive mode (effectively disabling it)
-sudo setenforce 0
-sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
-
-
 # cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
 # overlay
 # br_netfilter
 # EOF
+
+# Set SELinux in permissive mode (effectively disabling it)
+sudo setenforce 0
+sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
 # sysctl params required by setup, params persist across reboots
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf

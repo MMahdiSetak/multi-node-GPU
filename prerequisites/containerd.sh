@@ -67,6 +67,13 @@ EOF
 systemctl daemon-reload
 systemctl enable --now containerd
 
+sudo tee /etc/profile.d/localbin.sh <<EOF
+# Add /usr/local/bin to PATH for all users
+export PATH="/usr/local/bin:\$PATH"
+EOF
+sudo chmod +x /etc/profile.d/localbin.sh
+source /etc/profile.d/localbin.sh
+
 sudo mkdir -p /etc/containerd
 containerd config default | sudo tee /etc/containerd/config.toml
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
@@ -90,5 +97,15 @@ chmod -R 755 /home/admin/data/containerd
 
 mv /var/lib/containerd/* /home/admin/data/containerd/
 
+#### set proxy for containerd
+mkdir -p /etc/systemd/system/containerd.service.d
+cat <<EOF | sudo tee /etc/systemd/system/containerd.service.d/http-proxy.conf
+[Service]
+Environment="HTTP_PROXY=http://127.0.0.1:10808"
+Environment="HTTPS_PROXY=http://127.0.0.1:10808"
+Environment="NO_PROXY=localhost,127.0.0.1,10.0.0.0/8,192.168.0.0/16"
+EOF
+
+systemctl daemon-reload
 systemctl restart containerd
 systemctl status containerd

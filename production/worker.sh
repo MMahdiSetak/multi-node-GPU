@@ -13,5 +13,7 @@ kubeadm join master:6443 --token aot61h.ni1j9wpjdx8m8umc \
     --discovery-token-ca-cert-hash sha256:7fb206b4d47aa48e4a76fc0ef9ca338f2911fe1e759fef466a40db9b9feb23d1
 
 # sudo bash ../prerequisites/nvidia-container-toolkit.sh
-sudo nano /var/lib/kubelet/config.yaml
+cat <<EOF | sudo tee -a /var/lib/kubelet/config.yaml
 failSwapOn: false
+EOF
+systemctl restart kubelet

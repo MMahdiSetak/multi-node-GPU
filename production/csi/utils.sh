@@ -75,3 +75,23 @@ sysctl -p
 
 # IMPORTANT: restart kubelet (or reboot) so Kubernetes sees the new count
 systemctl restart kubelet
+
+
+##### make partition and format and mount for containerd
+fdisk /dev/sdc
+n
+p
+w
+
+lsblk
+sudo mkfs.ext4 /dev/sdc1
+sudo mkdir -p /home/admin/data
+
+sudo blkid /dev/sdc1
+sudo nano /etc/fstab
+UUID=e75cba80-82cf-41a9-ab31-934cec49846c /home/admin/data ext4 defaults 0 2
+
+sudo mount -a
+
+sudo chown -R admin:admin /home/admin/data
+sudo chmod -R u+rwX /home/admin/data
