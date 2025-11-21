@@ -93,48 +93,45 @@ helm repo add harbor https://helm.goharbor.io
 helm repo update
 
 cat <<EOF | helm upgrade --install harbor harbor/harbor --namespace harbor --wait --timeout 15m -f -
-externalURL: https://harbor.yourdomain.com
-
+externalURL: http://172.16.30.106
 harborAdminPassword: "VeryStrongAdminPass123!"
-
 expose:
-  type: loadBalancer                 # best with Cilium L2
-    tls:
-      enabled: false                   # no TLS at all
-    loadBalancer:
-      IP: 172.16.30.110                # static VIP (works if your cluster supports it)
-      annotations:
-        io.cilium/lb-ipam-ips: "172.16.30.110"   # Cilium IPAM keeps the IP fixed
-        io.cilium/lb-ipam-sharing-key: "harbor       # optional groups multiple services
-    ingress: {}                        # leave empty we don't use ingress
-
+  type: loadBalancer
+  tls:
+    enabled: false
+  loadBalancer:
+    IP: 172.16.30.106
+    annotations:
+      io.cilium/lb-ipam-ips: "172.16.30.106"
+      io.cilium/lb-ipam-sharing-key: "harbor"
+  ingress: {}
+internalTLS:
+  enabled: false
 persistence:
   enabled: true
-  resourcePolicy: keep
+  resourcePolicy: "keep"
   storageClass: rook-ceph-block
   persistentVolumeClaim:
     registry:
-      size: 1Ti          # adjust to your needs
+      size: 100Gi
     chartmuseum:
-      size: 200Gi
+      size: 20Gi
     jobservice:
       jobLog:
-        size: 20Gi
+        size: 2Gi
     trivy:
-      size: 100Gi
-
+      size: 10Gi
 imageChartStorage:
   type: s3
   s3:
     region: us-east-1
     regionendpoint: http://rook-ceph-rgw-harbor-rgw.rook-ceph.svc.cluster.local
-    accesskey: "<YOUR_ACCESS_KEY_FROM_STEP_2>"
-    secretkey: "<YOUR_SECRET_KEY_FROM_STEP_2>"
+    accesskey: "JU650M21KDXTCGCHXIJW"
+    secretkey: "q82W4iAyP5pHr3DEN4bSqDKY6AQLH9piDX3EcjMc"
     bucket: harbor-storage
-    secure: false      # set true + port 443 if you configured TLS on RGW
+    secure: false
     v4auth: true
     chunksize: "10m"
-
 database:
   type: external
   external:
@@ -144,18 +141,15 @@ database:
     password: VeryStrongPostgresPass123
     coreDatabase: harbor
     sslmode: disable
-
 redis:
   type: external
   external:
     addr: harbor-redis-master.harbor.svc.cluster.local:6379
     password: VeryStrongRedisPass123
     database: 0
-
 trivy:
   enabled: true
   replicas: 2
-
 core:
   replicas: 2
 portal:
@@ -163,12 +157,8 @@ portal:
 jobservice:
   replicas: 3
 registry:
-  replicas: 3        # safe because we use S3 storage
+  replicas: 3
 nginx:
   replicas: 3
-
-internalTLS:
-  enabled: true      # production recommendation – components communicate over TLS
-
 logLevel: info
 EOF
