@@ -8,6 +8,7 @@ helm install openebs --namespace openebs openebs/openebs \
 kubectl patch sc openebs-hostpath --type='json' -p='[{"op": "replace", "path": "/metadata/annotations/cas.openebs.io~1config", "value": "- name: StorageType\n  value: \"hostpath\"\n- name: BasePath\n  value: \"/home/admin/data/openebs\""}]'
 kubectl annotate storageclass openebs-hostpath storageclass.kubernetes.io/is-default-class=true
 
+kubectl annotate storageclass rook-ceph-block storageclass.kubernetes.io/is-default-class=true
 
 # --set loki.localpvScConfig.loki.basePath="/home/admin/data/openebs/localpv-hostpath/loki" \
 # --set loki.localpvScConfig.minio.basePath="/home/admin/data/openebs/localpv-hostpath/minio" \

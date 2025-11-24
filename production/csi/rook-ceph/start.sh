@@ -19,3 +19,5 @@ kubectl create -f deploy/examples/csi/cephfs/storageclass.yaml
 
 kubectl apply -f deploy/examples/dashboard-loadbalancer.yaml
 kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo
+
+xj:?Ix8:Q#H>P"VaiXhd
