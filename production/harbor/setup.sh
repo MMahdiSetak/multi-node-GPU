@@ -42,7 +42,7 @@ cat << EOF | helm install harbor-db bitnami/postgresql -n harbor --create-namesp
 auth:
   username: harbor
   password: VeryStrongPostgresPass123
-  database: harbor
+  database: registry
   postgresPassword: AnotherVeryStrongPostgresPass123   # optional but good to set
 
 primary:
@@ -162,3 +162,64 @@ nginx:
   replicas: 3
 logLevel: info
 EOF
+
+helm uninstall harbor -n harbor
+kubectl delete pvc harbor-jobservice -n harbor
+
+helm upgrade --install harbor harbor/harbor --namespace harbor --wait --timeout 15m -f values.yaml
+
+kubectl delete ns harbor
+
+Harbor12345
+
+
+kubectl get pods,deployments,daemonsets,replicasets,statefulsets,jobs,cronjobs --all-namespaces -o jsonpath="{.items[*].spec.template.spec.containers[*].image} {.items[*].spec.template.spec.initContainers[*].image} {.items[*].spec.jobTemplate.spec.template.spec.containers[*].image} {.items[*].spec.jobTemplate.spec.template.spec.initContainers[*].image}" | tr -s '[[:space:]]' '\n' | sort | uniq -c | sort -nr
+
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-large-pull-pod
+spec:
+  nodeName: worker-g02
+  containers:
+  - name: test-container
+    # image: oasislabs/testing:hello-world-1gb
+    # image: pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
+    image: docker.io/library/python
+    # image: harbor:443/docker-hub-cache/oasislabs/testing:hello-world-1gb # 200
+    # image: 172.16.30.106/docker-hub-cache/oasislabs/testing:hello-world-1gb # 509
+    command: ["sleep", "infinity"]
+    resources:
+      limits:
+        cpu: "100m"
+        memory: "128Mi"
+  restartPolicy: Never
+EOF
+kubectl delete pod test-large-pull-pod
+
+ctr images pull --local --skip-verify --hosts-dir "/etc/containerd/certs.d" docker.io/oasislabs/testing:hello-world-1gb
+ctr images pull --local --skip-verify 172.16.30.106/docker-hub-cache/oasislabs/testing:hello-world-1gb
+
+docker pull 172.16.30.106/docker-hub-cache/oasislabs/testing:hello-world-1gb
+docker pull harbor/docker-hub-cache/oasislabs/testing:hello-world-1gb
+
+curl -v -k -u admin:Harbor12345 https://172.16.30.106/docker-hub-cache/oasislabs/testing:hello-world-1gb
+
+curl -v -k -u admin:Harbor12345 https://172.16.30.106/v2/docker-hub-cache/oasislabs/testing/manifests/hello-world-1gb
+ctr image pull --hosts-dir "/etc/containerd/certs.d" --user admin:Harbor12345 docker.io/oasislabs/testing:hello-world-1gb
+
+
+crictl rmi --prune
+crictl pull 172.16.30.106/docker-hub-cache/oasislabs/testing:hello-world-1gb
+
+/etc/pki/ca-trust/source/anchors
+update-ca-trust
+
+crictl pull pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
+crictl pull oasislabs/testing:hello-world-1gb
+
+curl -v -k -u admin:Harbor12345 https://harbor/v2/docker-hub-cache/oasislabs/testing/manifests/hello-world-1gb
+
+
+docker pull harbor/oasislabs/testing:hello-world-1gb
