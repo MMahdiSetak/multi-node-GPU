@@ -220,7 +220,7 @@ cat <<EOF | tee /usr/local/etc/xray/config.json
             "port": 3500,
             "users": [
               {
-                "id": "1309f864-b0e9-4567-b169-0410580e04a5",
+                "id": "9c081815-f2ef-4ece-acb3-85f2297689c8",
                 "email": "t@t.tt",
                 "security": "auto",
                 "encryption": "none"
