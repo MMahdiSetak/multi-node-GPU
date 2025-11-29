@@ -34,6 +34,8 @@ stringData:
     use_refresh_token = true
     [date_formats]
     default_timezone = Asia/Tehran
+    [security]
+    allow_embedding = true
     [server]
     domain = 172.16.30.102
     root_url = http://172.16.30.102/grafana/
