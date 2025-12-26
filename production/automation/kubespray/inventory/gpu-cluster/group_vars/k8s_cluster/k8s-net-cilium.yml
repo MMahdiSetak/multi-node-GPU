@@ -400,8 +400,6 @@ cilium_extra_values:
   envoy:
     image:
       useDigest: false
-    envoy:
-      baseID: 1
   certgen:
     image:
       useDigest: false
