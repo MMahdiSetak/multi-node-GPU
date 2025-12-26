@@ -438,7 +438,6 @@ EOF
 
 
 rm -rf /etc/containerd/certs.d
-########## worked
 sudo mkdir -p /etc/containerd/certs.d/docker.io
 cat <<EOF | sudo tee /etc/containerd/certs.d/docker.io/hosts.toml
 server = "https://docker.io"
@@ -451,12 +450,76 @@ server = "https://docker.io"
   password = "Harbor12345"
 EOF
 ########## worked
-
 sudo mkdir -p /etc/containerd/certs.d/docker.io
 cat <<EOF | sudo tee /etc/containerd/certs.d/docker.io/hosts.toml
 server = "https://docker.io"
 
 [host."https://harbor:443/v2/docker-hub-cache"]
+  capabilities = ["pull", "resolve"]
+  override_path = true
+  skip_verify = true
+EOF
+########## worked
+sudo mkdir -p /etc/containerd/certs.d/docker.io
+cat <<EOF | sudo tee /etc/containerd/certs.d/docker.io/hosts.toml
+server = "https://docker.io"
+
+[host."https://harbor:443/v2/docker-hub-cache"]
+  capabilities = ["pull", "resolve"]
+  override_path = true
+  skip_verify = true
+EOF
+sudo mkdir -p /etc/containerd/certs.d/quay.io
+cat <<EOF | sudo tee /etc/containerd/certs.d/quay.io/hosts.toml
+server = "https://quay.io"
+
+[host."https://harbor:443/v2/quay-cache"]
+  capabilities = ["pull", "resolve"]
+  override_path = true
+  skip_verify = true
+EOF
+
+sudo mkdir -p /etc/containerd/certs.d/nvcr.io
+cat <<EOF | sudo tee /etc/containerd/certs.d/nvcr.io/hosts.toml
+server = "https://nvcr.io"
+
+[host."https://harbor:443/v2/nvcr-cache"]
+  capabilities = ["pull", "resolve"]
+  override_path = true
+  skip_verify = true
+EOF
+sudo mkdir -p /etc/containerd/certs.d/registry.k8s.io
+cat <<EOF | sudo tee /etc/containerd/certs.d/registry.k8s.io/hosts.toml
+server = "https://registry.k8s.io"
+
+[host."https://harbor:443/v2/k8s-registry-cache"]
+  capabilities = ["pull", "resolve"]
+  override_path = true
+  skip_verify = true
+EOF
+sudo mkdir -p /etc/containerd/certs.d/ghcr.io
+cat <<EOF | sudo tee /etc/containerd/certs.d/ghcr.io/hosts.toml
+server = "https://ghcr.io"
+
+[host."https://harbor:443/v2/ghcr-cache"]
+  capabilities = ["pull", "resolve"]
+  override_path = true
+  skip_verify = true
+EOF
+sudo mkdir -p /etc/containerd/certs.d/gcr.io
+cat <<EOF | sudo tee /etc/containerd/certs.d/gcr.io/hosts.toml
+server = "https://gcr.io"
+
+[host."https://harbor:443/v2/gcr-cache"]
+  capabilities = ["pull", "resolve"]
+  override_path = true
+  skip_verify = true
+EOF
+sudo mkdir -p /etc/containerd/certs.d/public.ecr.aws
+cat <<EOF | sudo tee /etc/containerd/certs.d/public.ecr.aws/hosts.toml
+server = "https://public.ecr.aws"
+
+[host."https://harbor:443/v2/ecr-public-cache"]
   capabilities = ["pull", "resolve"]
   override_path = true
   skip_verify = true
