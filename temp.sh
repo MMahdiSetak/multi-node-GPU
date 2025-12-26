@@ -14,6 +14,8 @@ kubectl get pods -A --field-selector spec.nodeName=worker-g01
 kubectl delete pod -A --field-selector=status.phase=Succeeded
 kubectl delete pod -A --field-selector=status.phase=Failed
 
+kubectl taint node master node-role.kubernetes.io/control-plane:NoSchedule-
+
 # delete kubeflow
 kustomize build example | kubectl delete --ignore-not-found --server-side --force-conflicts -f -
 kubectl delete namespace auth cert-manager istio-system knative-serving kubeflow kubeflow-user-example-com oauth2-proxy knative-eventing --force --grace-period=0
@@ -398,3 +400,4 @@ cat <<EOF | sudo tee -a /etc/dnf/dnf.conf
 proxy=http://127.0.0.1:10808
 EOF
 
+curl -x http://172.0.0.1:10808 -v https://registry.k8s.io/v2/kube-proxy/manifests/v1.33.5 -H "Accept: application/vnd.docker.distribution.manifest.v2+json"
