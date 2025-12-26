@@ -184,9 +184,10 @@ spec:
   nodeName: worker-g02
   containers:
   - name: test-container
+    image: ghcr.io/kubeflow/kubeflow/notebook-servers/jupyter-pytorch-cuda-full:v1.10.0
     # image: oasislabs/testing:hello-world-1gb
     # image: pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
-    image: docker.io/library/python
+    # image: docker.io/library/python
     # image: harbor:443/docker-hub-cache/oasislabs/testing:hello-world-1gb # 200
     # image: 172.16.30.106/docker-hub-cache/oasislabs/testing:hello-world-1gb # 509
     command: ["sleep", "infinity"]
@@ -218,8 +219,26 @@ update-ca-trust
 
 crictl pull pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
 crictl pull oasislabs/testing:hello-world-1gb
+crictl pull harbor:443/docker-hub-cache/oasislabs/testing:hello-world-1gb
+crictl pull harbor:443/k8s-registry-cache/kube-proxy:v1.33.5
+crictl pull harbor:443/docker-hub-cache/registry.k8s.io/kube-proxy:v1.33.5
 
 curl -v -k -u admin:Harbor12345 https://harbor/v2/docker-hub-cache/oasislabs/testing/manifests/hello-world-1gb
 
 
 docker pull harbor/oasislabs/testing:hello-world-1gb
+
+nerdctl --preserve-env=http_proxy,https_proxy,no_proxy pull registry.k8s.io/kube-proxy:v1.33.5
+nerdctl pull harbor:443/docker-hub-cache/oasislabs/testing:hello-world-1gb
+#tests:
+nerdctl pull oasislabs/testing:hello-world-1gb
+nerdctl pull quay.io/cilium/cilium:v1.18.2
+nerdctl pull ghcr.io/jonashackt/hello-world:latest
+nerdctl pull public.ecr.aws/aws-cli/aws-cli:latest
+nerdctl pull gcr.io/distroless/base:latest
+nerdctl pull nvcr.io/nvidia/cuda:12.0.0-base-ubuntu20.04
+nerdctl pull registry.k8s.io/pause:3.9
+
+nerdctl pull harbor:443/gcr-cache/distroless/base:latest
+nerdctl pull harbor:443/nvcr-cache/nvidia/cuda:12.0.0-base-ubuntu20.04
+nerdctl pull harbor:443/k8s-registry-cache/pause:3.9

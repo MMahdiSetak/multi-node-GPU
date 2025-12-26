@@ -179,3 +179,12 @@ Cilium will ARP-announce 172.16.30.110 for the LoadBalancer service → every ma
 This setup is perfect for internal/air-gapped use – fast, simple, secure enough for local network (you still have basic auth + can enable internalTLS).
 
 Let me know which transfer method you prefer or if you want the full updated `values.yaml` – happy to send the complete file.
+
+
+https://registry-1.docker.io
+https://quay.io
+https://nvcr.io
+https://registry.k8s.io
+https://ghcr.io
+https://gcr.io
+https://public.ecr.aws
