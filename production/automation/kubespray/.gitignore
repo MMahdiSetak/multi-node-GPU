@@ -26,8 +26,7 @@ plugins/mitogen
 
 # Ansible inventory
 inventory/*
-!inventory/local
-!inventory/sample
+!inventory/gpu-cluster
 inventory/*/artifacts/
 
 # Byte-compiled / optimized / DLL files
