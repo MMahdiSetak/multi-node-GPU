@@ -17,10 +17,24 @@ pip install -r requirements.txt
 
 ansible -i inventory/mycluster/inventory.ini all -m ping
 
-ansible-playbook -i inventory/mycluster/inventory.ini cluster.yml --check
+# ansible-playbook -i inventory/mycluster/inventory.ini cluster.yml --check
+
+# ansible-playbook -i inventory/gpu-cluster/inventory.ini cluster.yml -b -v \
+#     --skip-tags=apps,metrics_server,ingress_nginx,helm,bootstrap-os.swap,bootstrap-os.packages | tee deploy.log
 
 ansible-playbook -i inventory/gpu-cluster/inventory.ini cluster.yml -b -v \
-    --skip-tags=apps,metrics_server,ingress_nginx,helm,bootstrap-os.swap,bootstrap-os.packages | tee deploy.log
+    --skip-tags=metrics_server,ingress_nginx,helm,bootstrap-os.swap,bootstrap-os.packages | tee deploy.log
+
+ansible master -i inventory/gpu-cluster/inventory.ini -b --become-user=root \
+  -m fetch \
+  -a "src=/etc/kubernetes/admin.conf dest=~/.kube/config flat=yes"
+MASTER_IP=$(ansible -i inventory/gpu-cluster/inventory.ini kube_control_plane \
+  -m debug -a "msg={{ ansible_host | default(inventory_hostname) }}" \
+  | grep msg | awk -F'"' '{print $4}')
+
+echo "Master IP is: $MASTER_IP"
+sed -i "s|127.0.0.1|${MASTER_IP}|g" ~/.kube/config
+
 
 ansible-playbook -i inventory/gpu-cluster/inventory.ini cluster.yml --tags network -b -v
 ansible-playbook -i inventory/gpu-cluster/inventory.ini reset.yml -b -v \
