@@ -7,7 +7,7 @@
 # cilium_enable_ipv6: false
 
 # Enable l2 announcement from cilium to replace Metallb Ref: https://docs.cilium.io/en/v1.14/network/l2-announcements/
-cilium_l2announcements: false
+cilium_l2announcements: true
 
 # Cilium agent health port
 # cilium_agent_health_port: "9879"
@@ -216,7 +216,7 @@ cilium_l2announcements: false
 # Make Cilium take ownership over the `/etc/cni/net.d` directory on the node, renaming all non-Cilium CNI configurations to `*.cilium_bak`.
 # This ensures no Pods can be scheduled using other CNI plugins during Cilium agent downtime.
 # Available for Cilium v1.10 and up.
-# cilium_cni_exclusive: true
+cilium_cni_exclusive: false
 
 # Configure the log file for CNI logging with retention policy of 7 days.
 # Disable CNI file logging by setting this field to empty explicitly.
