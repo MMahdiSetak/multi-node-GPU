@@ -222,7 +222,7 @@ cat <<EOF | tee /usr/local/etc/xray/config.json
             "port": 3500,
             "users": [
               {
-                "id": "9c081815-f2ef-4ece-acb3-85f2297689c8",
+                "id": "1309f864-b0e9-4567-b169-0410580e04a5",
                 "email": "t@t.tt",
                 "security": "auto",
                 "encryption": "none"
@@ -400,4 +400,4 @@ cat <<EOF | sudo tee -a /etc/dnf/dnf.conf
 proxy=http://127.0.0.1:10808
 EOF
 
-curl -x http://172.0.0.1:10808 -v https://registry.k8s.io/v2/kube-proxy/manifests/v1.33.5 -H "Accept: application/vnd.docker.distribution.manifest.v2+json"
+curl -x http://127.0.0.1:10808 -v https://registry.k8s.io/v2/kube-proxy/manifests/v1.33.5 -H "Accept: application/vnd.docker.distribution.manifest.v2+json"
