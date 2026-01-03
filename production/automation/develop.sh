@@ -31,12 +31,13 @@ ansible master -i inventory/gpu-cluster/inventory.ini -b --become-user=root \
 MASTER_IP=$(ansible -i inventory/gpu-cluster/inventory.ini kube_control_plane \
   -m debug -a "msg={{ ansible_host | default(inventory_hostname) }}" \
   | grep msg | awk -F'"' '{print $4}')
-
 echo "Master IP is: $MASTER_IP"
 sed -i "s|127.0.0.1|${MASTER_IP}|g" ~/.kube/config
 
 
 ansible-playbook -i inventory/gpu-cluster/inventory.ini cluster.yml --tags network -b -v
+
+sudo sed -i 's/enabled=1/enabled=0/' /etc/yum.repos.d/kubernetes.repo
 ansible-playbook -i inventory/gpu-cluster/inventory.ini reset.yml -b -v \
     -e reset_confirmation=true | tee reset.log
 
@@ -59,3 +60,8 @@ export DESTINATION_REGISTRY=worker-g02:5000
 
 
 
+# Wipe all signatures (Ceph, LVM, filesystem, etc.)
+wipefs -a -f /dev/sdc
+
+# Zap GPT/MBR partition tables
+sgdisk --zap-all /dev/sdc
