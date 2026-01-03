@@ -1,7 +1,7 @@
 git clone --single-branch --branch v1.18.7 https://github.com/rook/rook.git
 
-kubectl create -f crds.yaml -f common.yaml -f csi-operator.yaml -f operator.yaml
-kubectl create -f cluster.yaml
+kubectl create -f deploy/examples/crds.yaml -f deploy/examples/common.yaml -f deploy/examples/csi-operator.yaml -f deploy/examples/operator.yaml
+kubectl create -f deploy/examples/cluster.yaml
 
 
 kubectl create -f deploy/examples/toolbox.yaml
