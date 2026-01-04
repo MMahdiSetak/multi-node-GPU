@@ -1,6 +1,7 @@
 ssh-keygen -t rsa
 ssh-copy-id admin@172.16.30.22
 ssh-copy-id admin@172.16.30.23
+ssh-copy-id admin@172.16.30.26
 
 sudo visudo
 admin ALL=(ALL) NOPASSWD: ALL
@@ -24,6 +25,9 @@ ansible -i inventory/mycluster/inventory.ini all -m ping
 
 ansible-playbook -i inventory/gpu-cluster/inventory.ini cluster.yml -b -v \
     --skip-tags=metrics_server,ingress_nginx,helm,bootstrap-os.swap,bootstrap-os.packages | tee deploy.log
+
+ansible-playbook -i inventory/gpu-cluster/inventory.ini scale.yml -b -v \
+    --skip-tags=metrics_server,ingress_nginx,helm,bootstrap-os.swap,bootstrap-os.packages | tee scale.log
 
 ansible master -i inventory/gpu-cluster/inventory.ini -b --become-user=root \
   -m fetch \
