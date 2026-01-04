@@ -18,6 +18,25 @@ cephClusterSpec:
   #   - name: "worker-s01"
   #     devices:
   #     - name: "sdb"
+  resources:
+    mgr:
+      limits:
+        memory: "1Gi"
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+    mon:
+      limits:
+        memory: "2Gi"
+      requests:
+        cpu: "1000m"
+        memory: "1Gi"
+    osd:
+      limits:
+        memory: "4Gi"
+      requests:
+        cpu: "1000m"
+        memory: "2Gi"
 
 toolbox:
   enabled: true

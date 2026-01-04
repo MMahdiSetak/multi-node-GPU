@@ -26,28 +26,11 @@ sed -i "s|127.0.0.1|${MASTER_IP}|g" ~/.kube/config
 
 kubectl taint node master node-role.kubernetes.io/control-plane:NoSchedule-
 
-cd ../../csi/rook-ceph
+cd ../../LB
+bash ./apply-lbippool.sh
 
-helm upgrade --install rook-ceph ./rook-ceph-v1.18.8.tgz \
-  --namespace rook-ceph \
-  --create-namespace \
-  -f operator-values.yaml \
-  --set image.repository="worker-g02:5000/rook/ceph" \
-  --set csi.cephcsi.repository="worker-g02:5000/cephcsi/cephcsi" \
-  --set csi.registrar.repository="worker-g02:5000/sig-storage/csi-node-driver-registrar" \
-  --set csi.provisioner.repository="worker-g02:5000/sig-storage/csi-provisioner" \
-  --set csi.snapshotter.repository="worker-g02:5000/sig-storage/csi-snapshotter" \
-  --set csi.attacher.repository="worker-g02:5000/sig-storage/csi-attacher" \
-  --set csi.resizer.repository="worker-g02:5000/sig-storage/csi-resizer" \
-  --set csi.csiAddons.repository="worker-g02:5000/csiaddons/k8s-sidecar"
-
-helm upgrade --install rook-ceph-cluster ./rook-ceph-cluster-v1.18.8.tgz \
-  --namespace rook-ceph \
-  --create-namespace \
-  -f cluster-values.yaml \
-  --set operatorNamespace=rook-ceph \
-  --set cephImage.repository="worker-g02:5000/ceph/ceph" \
-  --set toolbox.image="worker-g02:5000/ceph/ceph:v19.2.3"
+cd ../csi/rook-ceph
+bash ./install.sh
 
 # bash ../monitoring/install.sh
 # bash ../gpu-operator/install.sh
