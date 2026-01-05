@@ -32,6 +32,9 @@ bash ./apply-lbippool.sh
 cd ../csi/rook-ceph
 bash ./install.sh
 
+cd ../../harbor
+bash ./install.sh
+
 # bash ../monitoring/install.sh
 # bash ../gpu-operator/install.sh
 # bash ../kubeflow/install.sh
