@@ -85,4 +85,12 @@ echo "Secret Key: $secretkey"
 
 helm upgrade --install harbor ./harbor-1.18.1.tgz --namespace harbor --wait --timeout 15m -f values.yaml \
   --set persistence.imageChartStorage.s3.accesskey="$accesskey" \
-  --set persistence.imageChartStorage.s3.secretkey="$secretkey"
+  --set persistence.imageChartStorage.s3.secretkey="$secretkey" \
+  --set nginx.image.repository="${REGISTRY}/goharbor/nginx-photon" \
+  --set portal.image.repository="${REGISTRY}/goharbor/harbor-portal" \
+  --set core.image.repository="${REGISTRY}/goharbor/harbor-core" \
+  --set jobservice.image.repository="${REGISTRY}/goharbor/harbor-jobservice" \
+  --set registry.registry.image.repository="${REGISTRY}/goharbor/registry-photon" \
+  --set registry.controller.image.repository="${REGISTRY}/goharbor/harbor-registryctl" \
+  --set trivy.image.repository="${REGISTRY}/goharbor/trivy-adapter-photon" \
+  --set exporter.image.repository="${REGISTRY}/goharbor/harbor-exporter"
