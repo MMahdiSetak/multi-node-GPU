@@ -82,7 +82,7 @@ secretkey=$(kubectl -n rook-ceph get secret rook-ceph-object-user-harbor-rgw-har
 
 echo "Access Key: $accesskey"
 echo "Secret Key: $secretkey"
-
+# TODO variable for proxy
 helm upgrade --install harbor ./harbor-1.18.1.tgz --namespace harbor --wait --timeout 15m -f values.yaml \
   --set persistence.imageChartStorage.s3.accesskey="$accesskey" \
   --set persistence.imageChartStorage.s3.secretkey="$secretkey" \
@@ -94,3 +94,44 @@ helm upgrade --install harbor ./harbor-1.18.1.tgz --namespace harbor --wait --ti
   --set registry.controller.image.repository="${REGISTRY}/goharbor/harbor-registryctl" \
   --set trivy.image.repository="${REGISTRY}/goharbor/trivy-adapter-photon" \
   --set exporter.image.repository="${REGISTRY}/goharbor/harbor-exporter"
+
+# TODO create bucket harbor-storage
+sleep(5000) # TODO change with wait till ready state
+
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
+    -H "Content-Type: application/json" -d "{\"url\": \"https://registry-1.docker.io\", \"name\": \"docker-hub-upstream\", \"type\": \"docker-hub\"}"
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
+    -H "Content-Type: application/json" -d "{\"url\": \"https://quay.io\", \"name\": \"quay-upstream\", \"type\": \"docker-hub\"}"
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
+    -H "Content-Type: application/json" -d "{\"url\": \"https://nvcr.io\", \"name\": \"nvcr-upstream\", \"type\": \"docker-hub\"}"
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
+    -H "Content-Type: application/json" -d "{\"url\": \"https://registry.k8s.io\", \"name\": \"k8s-registry-upstream\", \"type\": \"docker-hub\"}"
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
+    -H "Content-Type: application/json" -d "{\"url\": \"https://ghcr.io\", \"name\": \"ghcr-upstream\", \"type\": \"docker-hub\"}"
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
+    -H "Content-Type: application/json" -d "{\"url\": \"https://gcr.io\", \"name\": \"gcr-upstream\", \"type\": \"docker-hub\"}"
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
+    -H "Content-Type: application/json" -d "{\"url\": \"https://public.ecr.aws\", \"name\": \"ecr-public-upstream\", \"type\": \"docker-hub\"}"
+
+
+id=$(curl -sk -u "admin:Harbor12345" "https://172.16.30.202/api/v2.0/registries" | grep -o '"id":[0-9]*,"name":"docker-hub-upstream"' | cut -d, -f1 | cut -d: -f2)
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/projects" \
+    -H "Content-Type: application/json" -d "{\"project_name\": \"docker-hub-cache\", \"public\": true, \"registry_id\": $id}"
+id=$(curl -sk -u "admin:Harbor12345" "https://172.16.30.202/api/v2.0/registries" | grep -o '"id":[0-9]*,"name":"quay-upstream"' | cut -d, -f1 | cut -d: -f2)
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/projects" \
+    -H "Content-Type: application/json" -d "{\"project_name\": \"quay-cache\", \"public\": true, \"registry_id\": $id}"
+id=$(curl -sk -u "admin:Harbor12345" "https://172.16.30.202/api/v2.0/registries" | grep -o '"id":[0-9]*,"name":"nvcr-upstream"' | cut -d, -f1 | cut -d: -f2)
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/projects" \
+    -H "Content-Type: application/json" -d "{\"project_name\": \"nvcr-cache\", \"public\": true, \"registry_id\": $id}"
+id=$(curl -sk -u "admin:Harbor12345" "https://172.16.30.202/api/v2.0/registries" | grep -o '"id":[0-9]*,"name":"k8s-registry-upstream"' | cut -d, -f1 | cut -d: -f2)
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/projects" \
+    -H "Content-Type: application/json" -d "{\"project_name\": \"k8s-registry-cache\", \"public\": true, \"registry_id\": $id}"
+id=$(curl -sk -u "admin:Harbor12345" "https://172.16.30.202/api/v2.0/registries" | grep -o '"id":[0-9]*,"name":"ghcr-upstream"' | cut -d, -f1 | cut -d: -f2)
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/projects" \
+    -H "Content-Type: application/json" -d "{\"project_name\": \"ghcr-cache\", \"public\": true, \"registry_id\": $id}"
+id=$(curl -sk -u "admin:Harbor12345" "https://172.16.30.202/api/v2.0/registries" | grep -o '"id":[0-9]*,"name":"gcr-upstream"' | cut -d, -f1 | cut -d: -f2)
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/projects" \
+    -H "Content-Type: application/json" -d "{\"project_name\": \"gcr-cache\", \"public\": true, \"registry_id\": $id}"
+id=$(curl -sk -u "admin:Harbor12345" "https://172.16.30.202/api/v2.0/registries" | grep -o '"id":[0-9]*,"name":"ecr-public-upstream"' | cut -d, -f1 | cut -d: -f2)
+curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/projects" \
+    -H "Content-Type: application/json" -d "{\"project_name\": \"ecr-public-cache\", \"public\": true, \"registry_id\": $id}"

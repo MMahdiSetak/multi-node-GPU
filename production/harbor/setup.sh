@@ -242,3 +242,13 @@ nerdctl pull registry.k8s.io/pause:3.9
 nerdctl pull harbor:443/gcr-cache/distroless/base:latest
 nerdctl pull harbor:443/nvcr-cache/nvidia/cuda:12.0.0-base-ubuntu20.04
 nerdctl pull harbor:443/k8s-registry-cache/pause:3.9
+
+nerdctl pull --insecure-registry 172.16.30.202/cache/oasislabs/testing:hello-world-1gb
+nerdctl pull --insecure-registry 172.16.30.202/cache/library/python
+nerdctl pull --insecure-registry 172.16.30.202/cache/cilium/cilium:v1.18.2
+nerdctl pull --insecure-registry 172.16.30.202/cache/jonashackt/hello-world:latest
+nerdctl pull --insecure-registry 172.16.30.202/cache/aws-cli/aws-cli:latest
+nerdctl pull --insecure-registry 172.16.30.202/cache/distroless/base:latest
+nerdctl pull --insecure-registry 172.16.30.202/cache/nvidia/cuda:12.0.0-base-ubuntu20.04
+nerdctl pull --insecure-registry 172.16.30.202/cache/pause:3.9
+nerdctl pull --insecure-registry 172.16.30.202/k8s-registry-cache/pause:3.9

@@ -185,7 +185,7 @@ cat <<EOF | tee /usr/local/etc/xray/config.json
     {
       "tag": "socks",
       "port": 10808,
-      "listen": "127.0.0.1",
+      "listen": "0.0.0.0",
       "protocol": "mixed",
       "sniffing": {
         "enabled": true,
@@ -395,6 +395,8 @@ sudo systemctl enable xray
 sudo systemctl status xray
 
 curl -x http://127.0.0.1:10808 myip.wtf/json
+
+curl -x http://172.16.30.24:10808 myip.wtf/json
 
 cat <<EOF | sudo tee -a /etc/dnf/dnf.conf
 proxy=http://127.0.0.1:10808
