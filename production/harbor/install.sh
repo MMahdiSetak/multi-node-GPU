@@ -1,6 +1,6 @@
 REGISTRY="worker-g02:5000"
 
-cat << EOF | helm upgrade --install harbor-db ./postgresql-18.2.0.tgz -n harbor --create-namespace --values -
+cat << EOF | helm upgrade --install harbor-db ../pg/postgresql-18.2.0.tgz -n harbor --create-namespace --values -
 global:
   imageRegistry: "${REGISTRY}"
   security:
