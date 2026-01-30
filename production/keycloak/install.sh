@@ -10,7 +10,7 @@ global:
 EOF
 
 # TODO download the chart
-cat << EOF | helm install keycloak codecentric/keycloakx --namespace keycloak --create-namespace --values -
+cat << EOF | helm install keycloak ./keycloakx-7.1.7.tgz --namespace keycloak --create-namespace --values -
 command:
   - "/opt/keycloak/bin/kc.sh"
   - "--verbose"
