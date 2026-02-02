@@ -75,7 +75,8 @@ EOF
 
 echo "Waiting for CephObjectStore to reach Ready phase..."
 kubectl wait --for=jsonpath='{.status.phase}=Ready' -n rook-ceph cephobjectstore/harbor-rgw --timeout=10m
-kubectl wait --for=object/secret=rook-ceph-object-user-harbor-rgw-harbor-user -n rook-ceph --timeout=10m
+kubectl wait --for=jsonpath='{.status.phase}=Ready' -n rook-ceph CephObjectStoreUser/harbor-user --timeout=10m
+# kubectl wait --for=object/secret=rook-ceph-object-user-harbor-rgw-harbor-user -n rook-ceph --timeout=10m
 
 accesskey=$(kubectl -n rook-ceph get secret rook-ceph-object-user-harbor-rgw-harbor-user -o jsonpath='{.data.AccessKey}' | base64 -d)
 secretkey=$(kubectl -n rook-ceph get secret rook-ceph-object-user-harbor-rgw-harbor-user -o jsonpath='{.data.SecretKey}' | base64 -d)
@@ -96,22 +97,22 @@ helm upgrade --install harbor ./harbor-1.18.1.tgz --namespace harbor --wait --ti
   --set exporter.image.repository="${REGISTRY}/goharbor/harbor-exporter"
 
 # TODO create bucket harbor-storage
-sleep(5000) # TODO change with wait till ready state
+# sleep 5000 # TODO change with wait till ready state
 
 curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
     -H "Content-Type: application/json" -d "{\"url\": \"https://registry-1.docker.io\", \"name\": \"docker-hub-upstream\", \"type\": \"docker-hub\"}"
 curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
-    -H "Content-Type: application/json" -d "{\"url\": \"https://quay.io\", \"name\": \"quay-upstream\", \"type\": \"docker-hub\"}"
+    -H "Content-Type: application/json" -d "{\"url\": \"https://quay.io\", \"name\": \"quay-upstream\", \"type\": \"docker-registry\"}"
 curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
-    -H "Content-Type: application/json" -d "{\"url\": \"https://nvcr.io\", \"name\": \"nvcr-upstream\", \"type\": \"docker-hub\"}"
+    -H "Content-Type: application/json" -d "{\"url\": \"https://nvcr.io\", \"name\": \"nvcr-upstream\", \"type\": \"docker-registry\"}"
 curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
-    -H "Content-Type: application/json" -d "{\"url\": \"https://registry.k8s.io\", \"name\": \"k8s-registry-upstream\", \"type\": \"docker-hub\"}"
+    -H "Content-Type: application/json" -d "{\"url\": \"https://registry.k8s.io\", \"name\": \"k8s-registry-upstream\", \"type\": \"docker-registry\"}"
 curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
-    -H "Content-Type: application/json" -d "{\"url\": \"https://ghcr.io\", \"name\": \"ghcr-upstream\", \"type\": \"docker-hub\"}"
+    -H "Content-Type: application/json" -d "{\"url\": \"https://ghcr.io\", \"name\": \"ghcr-upstream\", \"type\": \"docker-registry\"}"
 curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
-    -H "Content-Type: application/json" -d "{\"url\": \"https://gcr.io\", \"name\": \"gcr-upstream\", \"type\": \"docker-hub\"}"
+    -H "Content-Type: application/json" -d "{\"url\": \"https://gcr.io\", \"name\": \"gcr-upstream\", \"type\": \"docker-registry\"}"
 curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
-    -H "Content-Type: application/json" -d "{\"url\": \"https://public.ecr.aws\", \"name\": \"ecr-public-upstream\", \"type\": \"docker-hub\"}"
+    -H "Content-Type: application/json" -d "{\"url\": \"https://public.ecr.aws\", \"name\": \"ecr-public-upstream\", \"type\": \"docker-registry\"}"
 
 
 id=$(curl -sk -u "admin:Harbor12345" "https://172.16.30.202/api/v2.0/registries" | grep -o '"id":[0-9]*,"name":"docker-hub-upstream"' | cut -d, -f1 | cut -d: -f2)

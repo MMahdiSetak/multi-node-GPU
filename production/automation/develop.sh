@@ -62,10 +62,22 @@ export DESTINATION_REGISTRY=worker-g02:5000
 ./manage-offline-container-images.sh register
 
 
-
-
 # Wipe all signatures (Ceph, LVM, filesystem, etc.)
 wipefs -a -f /dev/sdc
 
 # Zap GPT/MBR partition tables
 sgdisk --zap-all /dev/sdc
+
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+source "$ROOT_DIR/env/global.env"
+
+bash "$ROOT_DIR/LB/apply-lbippool.sh"
+bash "$ROOT_DIR/csi/rook-ceph/install.sh"
+bash "$ROOT_DIR/harbor/install.sh"
+bash "$ROOT_DIR/monitor/install.sh"
+bash "$ROOT_DIR/kubeflow/install.sh"

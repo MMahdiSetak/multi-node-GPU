@@ -52,7 +52,52 @@
 #       skip_verify: false
 #       header:
 #         Authorization: "Basic XXX"
+harbor_ip: "172.16.30.202"   # ← change this variable when needed
 
+# Registry mirrors pointing to your Harbor caches
+containerd_registries_mirrors:
+  - prefix: docker.io
+    mirrors:
+      - host: "https://{{ harbor_ip }}/v2/docker-hub-cache"
+        capabilities: ["pull", "resolve"]
+        skip_verify: true
+        override_path: true
+  - prefix: quay.io
+    mirrors:
+      - host: "https://{{ harbor_ip }}/v2/quay-cache"
+        capabilities: ["pull", "resolve"]
+        skip_verify: true
+        override_path: true
+  - prefix: nvcr.io
+    mirrors:
+      - host: "https://{{ harbor_ip }}/v2/nvcr-cache"
+        capabilities: ["pull", "resolve"]
+        skip_verify: true
+        override_path: true
+  - prefix: registry.k8s.io
+    mirrors:
+      - host: "https://{{ harbor_ip }}/v2/k8s-registry-cache"
+        capabilities: ["pull", "resolve"]
+        skip_verify: true
+        override_path: true
+  - prefix: ghcr.io
+    mirrors:
+      - host: "https://{{ harbor_ip }}/v2/ghcr-cache"
+        capabilities: ["pull", "resolve"]
+        skip_verify: true
+        override_path: true
+  - prefix: gcr.io
+    mirrors:
+      - host: "https://{{ harbor_ip }}/v2/gcr-cache"
+        capabilities: ["pull", "resolve"]
+        skip_verify: true
+        override_path: true
+  - prefix: public.ecr.aws
+    mirrors:
+      - host: "https://{{ harbor_ip }}/v2/ecr-public-cache"
+        capabilities: ["pull", "resolve"]
+        skip_verify: true
+        override_path: true
 # containerd_max_container_log_line_size: 16384
 
 # containerd_registry_auth:

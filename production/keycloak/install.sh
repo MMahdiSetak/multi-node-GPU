@@ -1,6 +1,5 @@
-kubectl create namespace keycloak
-
-cat << EOF | helm install keycloak-db ../pg/postgresql-18.2.0.tgz --namespace keycloak --create-namespace --values -
+# kubectl create namespace keycloak
+cat << EOF | helm upgrade --install keycloak-db ../pg/postgresql-18.2.0.tgz --namespace keycloak --create-namespace --values -
 global:
   postgresql:
     auth:
@@ -10,7 +9,7 @@ global:
 EOF
 
 # TODO download the chart
-cat << EOF | helm install keycloak ./keycloakx-7.1.7.tgz --namespace keycloak --create-namespace --values -
+cat << EOF | helm upgrade --install keycloak ./keycloakx-7.1.7.tgz --namespace keycloak --create-namespace --values -
 command:
   - "/opt/keycloak/bin/kc.sh"
   - "--verbose"
