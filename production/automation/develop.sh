@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 
 
-ansible -i inventory/mycluster/inventory.ini all -m ping
+ansible -i inventory/gpu-cluster/inventory.ini all -m ping
 
 # ansible-playbook -i inventory/mycluster/inventory.ini cluster.yml --check
 
@@ -63,10 +63,13 @@ export DESTINATION_REGISTRY=worker-g02:5000
 
 
 # Wipe all signatures (Ceph, LVM, filesystem, etc.)
-wipefs -a -f /dev/sdc
+wipefs -a -f /dev/sdq
 
 # Zap GPT/MBR partition tables
-sgdisk --zap-all /dev/sdc
+sgdisk --zap-all /dev/sdq
+
+
+ansible-playbook -i inventory/gpu-cluster/inventory.ini playbooks/prep_disks.yml -b -v --check | tee prep_disk.log
 
 #!/usr/bin/env bash
 set -euo pipefail

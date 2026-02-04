@@ -1,0 +1,45 @@
+- name: Prepare / wipe unused local disks
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Discover local disks with no partitions
+      ansible.builtin.shell: |
+        lsblk -dno NAME |
+        grep '^sd' |
+        while read disk; do
+          [ -z "$(ls /dev/${disk}* 2>/dev/null | grep -v "^/dev/$disk$")" ] && echo "/dev/$disk"
+        done
+      register: unused_disks
+      changed_when: false
+
+    - name: Show discovered disks
+      ansible.builtin.debug:
+        msg: "Found wipe candidates: {{ unused_disks.stdout_lines | default([]) }}"
+
+
+    - name: Unmount anything still mounted on candidate disks (best effort)
+      ansible.builtin.command: umount {{ item }}* || true
+      loop: "{{ unused_disks.stdout_lines | default([]) }}"
+      changed_when: false
+      failed_when: false
+      when: unused_disks.stdout_lines | length > 0
+
+    - name: Wipe filesystem signatures
+      ansible.builtin.command: wipefs -a -f {{ item }}
+      loop: "{{ unused_disks.stdout_lines | default([]) }}"
+      changed_when: true
+      when: unused_disks.stdout_lines | length > 0
+
+    - name: Zap all partitions / GPT / MBR structures
+      ansible.builtin.command: sgdisk --zap-all {{ item }}
+      loop: "{{ unused_disks.stdout_lines | default([]) }}"
+      changed_when: true
+      when: unused_disks.stdout_lines | length > 0
+
+    - name: Discard / zero-out device if supported (SSD/NVMe/TRIM)
+      ansible.builtin.command: blkdiscard --zeroout {{ item }}
+      loop: "{{ unused_disks.stdout_lines | default([]) }}"
+      changed_when: false
+      failed_when: false
+      when: unused_disks.stdout_lines | length > 0
