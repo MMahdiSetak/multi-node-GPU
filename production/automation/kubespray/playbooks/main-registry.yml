@@ -1,0 +1,44 @@
+- name: Configure containerd mirrors to main registry
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure certs.d directories exist
+      file:
+        path: "/etc/containerd/certs.d/{{ item.name }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - { name: 'docker.io', cache: 'docker-hub-cache' }
+        - { name: 'quay.io', cache: 'quay-cache' }
+        - { name: 'nvcr.io', cache: 'nvcr-cache' }
+        - { name: 'registry.k8s.io', cache: 'k8s-registry-cache' }
+        - { name: 'ghcr.io', cache: 'ghcr-cache' }
+        - { name: 'gcr.io', cache: 'gcr-cache' }
+        - { name: 'public.ecr.aws', cache: 'ecr-public-cache' }
+
+    - name: Configure hosts.toml files
+      copy:
+        dest: "/etc/containerd/certs.d/{{ item.name }}/hosts.toml"
+        mode: '0644'
+        content: |
+          server = "https://{{ item.name }}"
+
+          [host."{{ harbor }}/v2/{{ item.cache }}"]
+            capabilities = ["pull", "resolve"]
+            override_path = true
+            skip_verify = true
+      loop:
+        - { name: 'docker.io', cache: 'docker-hub-cache' }
+        - { name: 'quay.io', cache: 'quay-cache' }
+        - { name: 'nvcr.io', cache: 'nvcr-cache' }
+        - { name: 'registry.k8s.io', cache: 'k8s-registry-cache' }
+        - { name: 'ghcr.io', cache: 'ghcr-cache' }
+        - { name: 'gcr.io', cache: 'gcr-cache' }
+        - { name: 'public.ecr.aws', cache: 'ecr-public-cache' }
+      notify: restart containerd
+
+  handlers:
+    - name: restart containerd
+      service:
+        name: containerd
+        state: restarted

@@ -403,3 +403,8 @@ proxy=http://127.0.0.1:10808
 EOF
 
 curl -x http://127.0.0.1:10808 -v https://registry.k8s.io/v2/kube-proxy/manifests/v1.33.5 -H "Accept: application/vnd.docker.distribution.manifest.v2+json"
+
+
+lsmod | grep -E 'nat|ip_tables'
+sudo modprobe ip_tables
+sudo modprobe iptable_nat

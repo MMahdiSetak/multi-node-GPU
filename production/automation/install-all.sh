@@ -4,17 +4,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-cd kubespray
-
-ansible-playbook -i inventory/gpu-cluster/inventory.ini reset.yml -b -v \
-    -e reset_confirmation=true | tee reset.log
-
-ansible all -i inventory/gpu-cluster/inventory.ini -b -m shell -a '
-  systemctl stop rook-ceph-mon@* || true
-  rm -rf /var/lib/rook/rook-ceph/* /var/lib/rook/mon-* /var/lib/rook/*
-  mkdir -p /var/lib/rook/rook-ceph
-  chown -R ceph:ceph /var/lib/rook 2>/dev/null || true
-'
+set -a
+source "$SCRIPT_DIR/config.env"
+set +a
+cd $SCRIPT_DIR/kubespray
 
 ansible-playbook -i inventory/gpu-cluster/inventory.ini cluster.yml -b -v \
     --skip-tags=metrics_server,ingress_nginx,helm,bootstrap-os.swap,bootstrap-os.packages | tee ../deploy.log
@@ -30,6 +23,8 @@ sed -i "s|127.0.0.1|${MASTER_IP}|g" ~/.kube/config
 
 kubectl taint node master node-role.kubernetes.io/control-plane:NoSchedule-
 
+ansible-playbook -i inventory/gpu-cluster/inventory.ini playbooks/tmp-registry.yml -b -v
+
 cd $ROOT_DIR/LB
 echo "▶ installing LB"
 bash ./apply-lbippool.sh
@@ -41,6 +36,9 @@ bash ./install.sh
 cd $ROOT_DIR/harbor
 echo "▶ installing harbor"
 bash ./install.sh
+
+cd $SCRIPT_DIR/kubespray
+ansible-playbook -i inventory/gpu-cluster/inventory.ini playbooks/main-registry.yml -b -v
 
 cd $ROOT_DIR/keycloak
 echo "▶ installing keycloak"

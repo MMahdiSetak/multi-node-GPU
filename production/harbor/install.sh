@@ -42,51 +42,74 @@ helm upgrade --install harbor-redis ./redis-24.1.0.tgz -n harbor \
   --set replica.persistence.storageClass=ceph-block \
   --set replica.persistence.size=20Gi
 
-
 cat <<EOF | kubectl apply -f -
-apiVersion: ceph.rook.io/v1
-kind: CephObjectStore
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
 metadata:
-  name: harbor-rgw
-  namespace: rook-ceph
+  name: harbor-storage-obc
+  namespace: harbor
 spec:
-  metadataPool:
-    replicated:
-      size: 1
-  dataPool:
-    replicated:
-      size: 1
-  preservePoolsOnDelete: true
-  gateway:
-    instances: 2
-    port: 80
+  bucketName: harbor-storage
+  storageClassName: ceph-bucket
 EOF
 
-cat <<EOF | kubectl apply -f - 
-apiVersion: ceph.rook.io/v1
-kind: CephObjectStoreUser
-metadata:
-  name: harbor-user
-  namespace: rook-ceph
-spec:
-  store: harbor-rgw
-  displayName: "Harbor S3 User"
-EOF
 
-echo "Waiting for CephObjectStore to reach Ready phase..."
-kubectl wait --for=jsonpath='{.status.phase}=Ready' -n rook-ceph cephobjectstore/harbor-rgw --timeout=10m
-kubectl wait --for=jsonpath='{.status.phase}=Ready' -n rook-ceph CephObjectStoreUser/harbor-user --timeout=10m
+# cat <<EOF | kubectl apply -f -
+# apiVersion: ceph.rook.io/v1
+# kind: CephObjectStore
+# metadata:
+#   name: harbor-rgw
+#   namespace: rook-ceph
+# spec:
+#   metadataPool:
+#     replicated:
+#       size: 1
+#   dataPool:
+#     replicated:
+#       size: 1
+#   preservePoolsOnDelete: true
+#   gateway:
+#     instances: 2
+#     port: 80
+# EOF
+
+# cat <<EOF | kubectl apply -f - 
+# apiVersion: ceph.rook.io/v1
+# kind: CephObjectStoreUser
+# metadata:
+#   name: harbor-user
+#   namespace: rook-ceph
+# spec:
+#   store: harbor-rgw
+#   displayName: "Harbor S3 User"
+# EOF
+
+echo "Waiting for Secret and ConfigMap harbor-storage-obc..."
+
+until kubectl get secret harbor-storage-obc -n harbor >/dev/null 2>&1 && kubectl get configmap harbor-storage-obc -n harbor >/dev/null 2>&1; do
+  sleep 2
+done
+echo "Secret and ConfigMap are now created."
+# kubectl wait --for=jsonpath='{.status.phase}=Ready' -n rook-ceph cephobjectstore/harbor-rgw --timeout=10m
+# kubectl wait --for=jsonpath='{.status.phase}=Ready' -n rook-ceph CephObjectStoreUser/harbor-user --timeout=10m
 # kubectl wait --for=object/secret=rook-ceph-object-user-harbor-rgw-harbor-user -n rook-ceph --timeout=10m
 
-accesskey=$(kubectl -n rook-ceph get secret rook-ceph-object-user-harbor-rgw-harbor-user -o jsonpath='{.data.AccessKey}' | base64 -d)
-secretkey=$(kubectl -n rook-ceph get secret rook-ceph-object-user-harbor-rgw-harbor-user -o jsonpath='{.data.SecretKey}' | base64 -d)
+# accesskey=$(kubectl -n rook-ceph get secret rook-ceph-object-user-harbor-rgw-harbor-user -o jsonpath='{.data.AccessKey}' | base64 -d)
+# secretkey=$(kubectl -n rook-ceph get secret rook-ceph-object-user-harbor-rgw-harbor-user -o jsonpath='{.data.SecretKey}' | base64 -d)
 
-echo "Access Key: $accesskey"
-echo "Secret Key: $secretkey"
+BUCKET_NAME=$(kubectl get cm -n harbor harbor-storage-obc -o jsonpath='{.data.BUCKET_NAME}')
+ACCESS_KEY=$(kubectl get secret -n harbor harbor-storage-obc -o jsonpath='{.data.AWS_ACCESS_KEY_ID}' | base64 --decode)
+SECRET_KEY=$(kubectl get secret -n harbor harbor-storage-obc -o jsonpath='{.data.AWS_SECRET_ACCESS_KEY}' | base64 --decode)
+ENDPOINT=$(kubectl get cm -n harbor harbor-storage-obc -o jsonpath='{.data.BUCKET_HOST}')
+
+echo "Access Key: $ACCESS_KEY"
+echo "Secret Key: $SECRET_KEY"
 # TODO variable for proxy
 helm upgrade --install harbor ./harbor-1.18.1.tgz --namespace harbor --wait --timeout 15m -f values.yaml \
-  --set persistence.imageChartStorage.s3.accesskey="$accesskey" \
-  --set persistence.imageChartStorage.s3.secretkey="$secretkey" \
+  --set persistence.imageChartStorage.s3.bucket="$BUCKET_NAME" \
+  --set persistence.imageChartStorage.s3.accesskey="$ACCESS_KEY" \
+  --set persistence.imageChartStorage.s3.secretkey="$SECRET_KEY" \
+  --set persistence.imageChartStorage.s3.regionendpoint="http://$ENDPOINT.cluster.local" \
   --set nginx.image.repository="${REGISTRY}/goharbor/nginx-photon" \
   --set portal.image.repository="${REGISTRY}/goharbor/harbor-portal" \
   --set core.image.repository="${REGISTRY}/goharbor/harbor-core" \

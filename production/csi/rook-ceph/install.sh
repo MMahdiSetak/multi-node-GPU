@@ -44,7 +44,7 @@ metadata:
     app: rook-ceph-mgr
     rook_cluster: rook-ceph
   annotations:
-    "lbipam.cilium.io/ips": "${CEPH_DASHBOARD_IP}"
+    "lbipam.cilium.io/ips": "${CEPH_IP}"
 spec:
   ports:
     - name: dashboard
@@ -60,5 +60,7 @@ spec:
 EOF
 
 kubectl annotate storageclass ceph-block storageclass.kubernetes.io/is-default-class=true
-
+while ! kubectl -n rook-ceph get secret rook-ceph-dashboard-password >/dev/null 2>&1; do
+  sleep 1
+done
 kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo

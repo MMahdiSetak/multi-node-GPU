@@ -1,0 +1,27 @@
+- name: Configure containerd mirror for quay.io
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure quay.io certs.d directory exists
+      file:
+        path: /etc/containerd/certs.d/quay.io
+        state: directory
+        mode: '0755'
+
+    - name: Configure quay.io hosts.toml
+      copy:
+        dest: /etc/containerd/certs.d/quay.io/hosts.toml
+        mode: '0644'
+        content: |
+          server = "https://quay.io"
+
+          [host."http://172.16.30.25:5000"]
+            capabilities = ["pull", "resolve"]
+            skip_verify = true
+      notify: restart containerd
+
+  handlers:
+    - name: restart containerd
+      service:
+        name: containerd
+        state: restarted

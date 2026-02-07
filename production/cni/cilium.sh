@@ -35,3 +35,4 @@ bpf-lb-sock-hostns-only: "true"
 
 
 kubectl -n kube-system rollout restart ds cilium
+kubectl rollout restart deployment -n kube-system cilium-operator

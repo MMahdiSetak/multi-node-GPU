@@ -8,7 +8,11 @@ global:
       database: keycloak
 EOF
 
-# TODO download the chart
+# TODO overwrite ips in json file
+kubectl create configmap keycloak-realm-import \
+  --namespace keycloak \
+  --from-file=isiGPU-realm.json=./isi-realm.json
+
 cat << EOF | helm upgrade --install keycloak ./keycloakx-7.1.7.tgz --namespace keycloak --create-namespace --values -
 command:
   - "/opt/keycloak/bin/kc.sh"
@@ -37,6 +41,8 @@ extraEnv: |
 
 service:
   type: LoadBalancer
+  annotations:
+    lbipam.cilium.io/ips: "${KEYCLOAK_LB_IP}"
 
 dbchecker:
   enabled: true
@@ -56,4 +62,17 @@ secrets:
     stringData:
       user: admin
       password: secret
+
+extraVolumes: |
+  - name: realm-import
+    configMap:
+      name: keycloak-realm-import   # must exist before helm upgrade
+
+extraVolumeMounts: |
+  - name: realm-import
+    mountPath: /opt/keycloak/data/import
+    readOnly: true
+
+args:
+  - "--import-realm"
 EOF

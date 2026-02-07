@@ -260,3 +260,5 @@ nerdctl pull registry.k8s.io/pause:3.9
 nerdctl pull registry.k8s.io/sig-storage/csi-resizer:v1.13.2
 nerdctl pull --insecure-registry 172.16.30.202/k8s-registry-cache/sig-storage/csi-resizer:v1.13.2
 crictl pull registry.k8s.io/sig-storage/csi-resizer:v1.13.2
+
+nerdctl pull --insecure-registry 172.16.30.25:5000/ceph/ceph:v19.2.3

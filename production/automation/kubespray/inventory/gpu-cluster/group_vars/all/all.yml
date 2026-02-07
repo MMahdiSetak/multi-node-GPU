@@ -143,4 +143,4 @@ allow_unsupported_distribution_setup: false
 
 
 
-deploy_nerdctl: false
+deploy_nerdctl: true
