@@ -1,5 +1,3 @@
-REGISTRY="worker-g02:5000"
-
 cat << EOF | helm upgrade --install harbor-db ../pg/postgresql-18.2.0.tgz -n harbor --create-namespace --values -
 global:
   imageRegistry: "${REGISTRY}"
@@ -104,8 +102,10 @@ ENDPOINT=$(kubectl get cm -n harbor harbor-storage-obc -o jsonpath='{.data.BUCKE
 
 echo "Access Key: $ACCESS_KEY"
 echo "Secret Key: $SECRET_KEY"
-# TODO variable for proxy
+
 helm upgrade --install harbor ./harbor-1.18.1.tgz --namespace harbor --wait --timeout 15m -f values.yaml \
+  --set proxy.httpProxy=$HTTP_PROXY \
+  --set proxy.httpsProxy=$HTTPS_PROXY \
   --set persistence.imageChartStorage.s3.bucket="$BUCKET_NAME" \
   --set persistence.imageChartStorage.s3.accesskey="$ACCESS_KEY" \
   --set persistence.imageChartStorage.s3.secretkey="$SECRET_KEY" \
@@ -119,8 +119,7 @@ helm upgrade --install harbor ./harbor-1.18.1.tgz --namespace harbor --wait --ti
   --set trivy.image.repository="${REGISTRY}/goharbor/trivy-adapter-photon" \
   --set exporter.image.repository="${REGISTRY}/goharbor/harbor-exporter"
 
-# TODO create bucket harbor-storage
-# sleep 5000 # TODO change with wait till ready state
+sleep 5
 
 curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/registries" \
     -H "Content-Type: application/json" -d "{\"url\": \"https://registry-1.docker.io\", \"name\": \"docker-hub-upstream\", \"type\": \"docker-hub\"}"
@@ -159,3 +158,6 @@ curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/projects
 id=$(curl -sk -u "admin:Harbor12345" "https://172.16.30.202/api/v2.0/registries" | grep -o '"id":[0-9]*,"name":"ecr-public-upstream"' | cut -d, -f1 | cut -d: -f2)
 curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/projects" \
     -H "Content-Type: application/json" -d "{\"project_name\": \"ecr-public-cache\", \"public\": true, \"registry_id\": $id}"
+
+
+# TODO restore from backup if exists

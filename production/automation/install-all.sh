@@ -9,7 +9,21 @@ source "$SCRIPT_DIR/config.env"
 set +a
 cd $SCRIPT_DIR/kubespray
 
+extra_vars=$(cat <<EOF
+registry_host: "$REGISTRY"
+containerd_registries_mirrors:
+  - prefix: "$REGISTRY"
+    mirrors:
+      - host: "http://$REGISTRY"
+        capabilities: ["pull", "resolve"]
+        skip_verify: true
+files_repo: "$FILES_REPO"
+harbor: "$HARBOR_IP"
+EOF
+)
+
 ansible-playbook -i inventory/gpu-cluster/inventory.ini cluster.yml -b -v \
+    -e "$extra_vars" \
     --skip-tags=metrics_server,ingress_nginx,helm,bootstrap-os.swap,bootstrap-os.packages | tee ../deploy.log
 
 ansible master -i inventory/gpu-cluster/inventory.ini -b --become-user=root \
@@ -38,7 +52,8 @@ echo "▶ installing harbor"
 bash ./install.sh
 
 cd $SCRIPT_DIR/kubespray
-ansible-playbook -i inventory/gpu-cluster/inventory.ini playbooks/main-registry.yml -b -v
+ansible-playbook -i inventory/gpu-cluster/inventory.ini playbooks/main-registry.yml -b -v \
+    -e "$extra_vars" \
 
 cd $ROOT_DIR/keycloak
 echo "▶ installing keycloak"

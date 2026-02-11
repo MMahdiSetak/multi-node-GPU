@@ -1,17 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Load configuration
-CONFIG_FILE="${CONFIG_FILE:-./config.env}"
-
-if [[ ! -f "$CONFIG_FILE" ]]; then
-  echo "Error: Config file not found: $CONFIG_FILE" >&2
-  exit 1
-fi
-
-# shellcheck source=/dev/null
-source "$CONFIG_FILE"
-
 helm upgrade --install rook-ceph ./rook-ceph-v1.18.8.tgz \
   --namespace rook-ceph \
   --create-namespace \
@@ -32,7 +21,6 @@ helm upgrade --install rook-ceph-cluster ./rook-ceph-cluster-v1.18.8.tgz \
   --set operatorNamespace=rook-ceph \
   --set cephImage.repository="${REGISTRY}/ceph/ceph" \
   --set toolbox.image="${REGISTRY}/ceph/ceph:v19.2.3"
-
 
 cat <<EOF | kubectl apply -f - 
 apiVersion: v1

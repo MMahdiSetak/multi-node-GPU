@@ -387,8 +387,8 @@ existingSecretSecretKey: ""
 # The proxy settings for updating trivy vulnerabilities from the Internet and replicating
 # artifacts from/to the registries that cannot be reached directly
 proxy:
-  httpProxy: http://172.16.30.24:10808
-  httpsProxy: http://172.16.30.24:10808
+  httpProxy:
+  httpsProxy:
   noProxy: 127.0.0.1,localhost,.local,.internal,.svc,.cluster,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
   components:
     - core

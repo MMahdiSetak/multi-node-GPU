@@ -23,6 +23,11 @@
         content: |
           server = "https://{{ item.name }}"
 
+          [host."{{ harbor }}/v2/{{ item.cache }}-backup"]
+            capabilities = ["pull", "resolve"]
+            override_path = true
+            skip_verify = true
+
           [host."{{ harbor }}/v2/{{ item.cache }}"]
             capabilities = ["pull", "resolve"]
             override_path = true
