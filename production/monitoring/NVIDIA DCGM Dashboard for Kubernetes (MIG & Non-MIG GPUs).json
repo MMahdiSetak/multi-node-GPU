@@ -1,14 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
   "__elements": {},
   "__requires": [
     {
@@ -98,8 +88,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -172,9 +161,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "editorMode": "code",
           "exemplar": true,
           "expr": "100 * avg (DCGM_FI_PROF_GR_ENGINE_ACTIVE{Hostname=~\"$Hostname\", gpu=~\"$gpu\", GPU_I_PROFILE=~\"$mig\"})\n",
@@ -191,8 +178,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -265,9 +251,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "editorMode": "code",
           "exemplar": true,
           "expr": "100 * avg (DCGM_FI_PROF_PIPE_TENSOR_ACTIVE{Hostname=~\"$Hostname\", gpu=~\"$gpu\", GPU_I_PROFILE=~\"$mig\"})\n",
@@ -284,8 +268,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -358,9 +341,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "editorMode": "code",
           "exemplar": true,
           "expr": "100* avg (DCGM_FI_PROF_DRAM_ACTIVE{Hostname=~\"$Hostname\", gpu=~\"$gpu\", GPU_I_PROFILE=~\"$mig\"})\n",
@@ -377,8 +358,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -450,9 +430,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "editorMode": "code",
           "exemplar": true,
           "expr": "sum (DCGM_FI_DEV_FB_USED{Hostname=~\"$Hostname\", gpu=~\"$gpu\", GPU_I_PROFILE=~\"$mig\"})\n",
@@ -465,9 +443,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "editorMode": "code",
           "expr": "sum (DCGM_FI_DEV_FB_USED{Hostname=~\"$Hostname\", gpu=~\"$gpu\", GPU_I_PROFILE=~\"$mig\"}) + sum (DCGM_FI_DEV_FB_FREE{Hostname=~\"$Hostname\", gpu=~\"$gpu\", GPU_I_PROFILE=~\"$mig\"})",
           "hide": false,
@@ -509,8 +485,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -592,9 +567,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
@@ -616,8 +589,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -699,9 +671,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
@@ -723,8 +693,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -807,9 +776,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "editorMode": "code",
           "exemplar": false,
           "expr": "sum(increase(DCGM_FI_DEV_TOTAL_ENERGY_CONSUMPTION{Hostname=~\"$Hostname\", gpu=~\"$gpu\"}[1h]) / 3600000)",
@@ -821,9 +788,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "editorMode": "code",
           "expr": "sum(increase(DCGM_FI_DEV_TOTAL_ENERGY_CONSUMPTION{Hostname=~\"$Hostname\", gpu=~\"$gpu\"}[24h]) / 3600000)",
           "hide": false,
@@ -838,8 +803,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -896,9 +860,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
@@ -920,8 +882,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -978,9 +939,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
@@ -1002,8 +961,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1085,9 +1043,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
@@ -1109,8 +1065,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1192,9 +1147,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": true,
@@ -1216,8 +1169,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1266,9 +1218,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "expr": "count by(modelName) (DCGM_FI_DEV_SM_CLOCK)",
@@ -1299,8 +1249,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1382,9 +1331,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
@@ -1406,8 +1353,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1579,9 +1525,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
@@ -1600,9 +1544,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "editorMode": "code",
           "exemplar": false,
           "expr": "avg by(GPU_I_ID, Hostname, gpu, GPU_I_PROFILE)(DCGM_FI_DEV_FB_FREE{Hostname=~\"$Hostname\", gpu=~\"$gpu\", GPU_I_PROFILE=~\"$mig\"})",
@@ -1746,8 +1688,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1830,9 +1771,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "editorMode": "code",
           "exemplar": false,
           "expr": "avg by(GPU_I_ID, Hostname, gpu, GPU_I_PROFILE) (DCGM_FI_PROF_GR_ENGINE_ACTIVE{Hostname=~\"$Hostname\", gpu=~\"$gpu\", GPU_I_PROFILE=~\"$mig\"})",
@@ -1849,8 +1788,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1933,9 +1871,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
@@ -1957,8 +1893,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -2041,9 +1976,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
@@ -2065,8 +1998,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -2208,9 +2140,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
@@ -2280,8 +2210,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -2362,9 +2291,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
@@ -2386,8 +2313,7 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "type": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -2468,9 +2394,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+            "type": "prometheus"  },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
@@ -2504,8 +2428,7 @@
         "allValue": ".*",
         "current": {},
         "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
+          "type": "prometheus"  
         },
         "definition": "label_values(DCGM_FI_DEV_FB_FREE,Hostname)",
         "includeAll": true,
@@ -2526,8 +2449,7 @@
         "allValue": ".*",
         "current": {},
         "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
+          "type": "prometheus"  
         },
         "definition": "label_values(DCGM_FI_DEV_FB_FREE,gpu)",
         "includeAll": true,
@@ -2547,8 +2469,7 @@
         "allValue": ".*",
         "current": {},
         "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
+          "type": "prometheus"  
         },
         "definition": "label_values(DCGM_FI_DEV_FB_FREE,GPU_I_PROFILE)",
         "includeAll": true,
