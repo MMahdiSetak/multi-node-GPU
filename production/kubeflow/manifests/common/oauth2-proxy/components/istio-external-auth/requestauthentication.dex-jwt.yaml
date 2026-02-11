@@ -8,7 +8,7 @@ spec:
     matchLabels:
       app: istio-ingressgateway
   jwtRules:
-  - issuer: http://172.16.30.102/dex
+  - issuer: http://172.16.30.205/dex
     forwardOriginalToken: true
     outputClaimToHeaders:
     - header: kubeflow-userid

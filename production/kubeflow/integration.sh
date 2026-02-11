@@ -52,7 +52,7 @@ kubectl edit configmap centraldashboard-config -n kubeflow
                 "type": "item",
                 "iframe": true,
                 "text": "Monitoring",
-                "link": "/grafana/d/pgv-h42QjU_Ja",
+                "link": "/grafana/d/pgv-h42QjU_J",
                 "icon": "launch"
             }
         ],

@@ -69,7 +69,15 @@ data:
                 "type": "section"
             }
         ],
-        "externalLinks": [],
+        "externalLinks": [
+            {
+                "type": "item",
+                "iframe": true,
+                "text": "Monitoring",
+                "link": "/grafana/d/pgv-h42QjU_J",
+                "icon": "launch"
+            }
+        ],
         "documentationItems": [
             {
                 "desc": "The Kubeflow website",

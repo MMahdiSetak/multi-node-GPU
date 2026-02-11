@@ -8,7 +8,7 @@ global:
       database: keycloak
 EOF
 
-# TODO overwrite ips in json file
+envsubst < isi-realm-template.json > isi-realm.json
 kubectl create configmap keycloak-realm-import \
   --namespace keycloak \
   --from-file=isiGPU-realm.json=./isi-realm.json

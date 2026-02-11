@@ -158,3 +158,25 @@ kubectl -n kubeflow rollout restart deployment volumes-web-app-deployment
 kubectl -n istio-system patch svc istio-ingressgateway \
     --type='merge' \
     -p '{"metadata": {"annotations": {"lbipam.cilium.io/ips": "'${KUBEFLOW_IP}'"}}, "spec": {"type": "LoadBalancer"}}'
+
+cat <<EOF | kubectl apply -f -
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: grafana
+  namespace: kubeflow
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - kubeflow-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /grafana/
+    route:
+    - destination:
+        host: grafana.monitoring.svc.cluster.local  
+        port:
+          number: 80
+EOF

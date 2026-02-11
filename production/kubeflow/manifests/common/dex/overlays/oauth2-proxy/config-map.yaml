@@ -4,7 +4,7 @@ metadata:
   name: dex
 data:
   config.yaml: |
-    issuer: http://172.16.30.102/dex
+    issuer: http://172.16.30.205/dex
     storage:
       type: kubernetes
       config:
@@ -32,10 +32,10 @@ data:
       id: keycloak
       name: keycloak
       config:
-        issuer: http://172.16.30.103/auth/realms/infra
+        issuer: http://172.16.30.203/auth/realms/isiGPU
         clientID: kubeflow-oidc-authservice
-        clientSecret: ozUC0zcUqW3T9UA1LPnZVrmrPugXmfDK
-        redirectURI: http://172.16.30.102/dex/callback
+        clientSecret: urQd4BnZAmKuPkqoOCB4vlIneeWIdYCj
+        redirectURI: http://172.16.30.205/dex/callback
         insecure: false
         insecureSkipEmailVerified: true
         userNameKey: email       

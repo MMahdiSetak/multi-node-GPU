@@ -14,11 +14,11 @@ stringData:
     disable_login_form = false
     [auth.generic_oauth]
     allow_sign_up = true
-    api_url = http://172.16.30.103/auth/realms/infra/protocol/openid-connect/userinfo
-    auth_url = http://172.16.30.103/auth/realms/infra/protocol/openid-connect/auth
-    auto_login = false
-    client_id = grafana
-    client_secret = $GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
+    api_url = http://172.16.30.203/auth/realms/isiGPU/protocol/openid-connect/userinfo
+    auth_url = http://172.16.30.203/auth/realms/isiGPU/protocol/openid-connect/auth
+    auto_login = true
+    client_id = kubeflow-oidc-authservice
+    client_secret = urQd4BnZAmKuPkqoOCB4vlIneeWIdYCj
     email_attribute_path = email
     enabled = true
     icon = signin
@@ -28,16 +28,16 @@ stringData:
     name_attribute_path = full_name
     role_attribute_path = contains(realm_access.roles[*], 'admin') && 'Admin' || 'Viewer'
     scopes = openid email profile
-    signout_redirect_url = http://172.16.30.103/auth/realms/infra/protocol/openid-connect/logout
+    signout_redirect_url = http://172.16.30.203/auth/realms/isiGPU/protocol/openid-connect/logout
     tls_skip_verify_insecure = true
-    token_url = http://172.16.30.103/auth/realms/infra/protocol/openid-connect/token
+    token_url = http://172.16.30.203/auth/realms/isiGPU/protocol/openid-connect/token
     use_refresh_token = true
     [date_formats]
     default_timezone = Asia/Tehran
     [security]
     allow_embedding = true
     [server]
-    domain = 172.16.30.102
-    root_url = http://172.16.30.102/grafana/
+    domain = 172.16.30.205
+    root_url = http://172.16.30.205/grafana/
     serve_from_sub_path = true
 type: Opaque

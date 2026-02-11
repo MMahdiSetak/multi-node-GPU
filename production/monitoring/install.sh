@@ -2,16 +2,16 @@ cd manifests
 
 kubectl create namespace monitoring
 
-# cat <<EOF | kubectl apply -f -
-# apiVersion: v1
-# kind: Secret
-# metadata:
-#   name: grafana-oauth-secret
-#   namespace: monitoring
-# type: Opaque
-# stringData:
-#   client_secret: LU5fS1isflKSCFYCcciuwhxsMxshNdky
-# EOF
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-oauth-secret
+  namespace: monitoring
+type: Opaque
+stringData:
+  client_secret: urQd4BnZAmKuPkqoOCB4vlIneeWIdYCj
+EOF
 
 tee ./grafana-config.yaml <<- GRAFANA_CONFIG
 apiVersion: v1
@@ -30,11 +30,11 @@ stringData:
     disable_login_form = false
     [auth.generic_oauth]
     allow_sign_up = true
-    api_url = http://$KEYCLOAK_IP/auth/realms/infra/protocol/openid-connect/userinfo
-    auth_url = http://$KEYCLOAK_IP/auth/realms/infra/protocol/openid-connect/auth
-    auto_login = false
-    client_id = grafana
-    client_secret = yl0THzKH3PbWxmAFLiqrzJanZfA3Wa2F
+    api_url = http://$KEYCLOAK_IP/auth/realms/isiGPU/protocol/openid-connect/userinfo
+    auth_url = http://$KEYCLOAK_IP/auth/realms/isiGPU/protocol/openid-connect/auth
+    auto_login = true
+    client_id = kubeflow-oidc-authservice
+    client_secret = urQd4BnZAmKuPkqoOCB4vlIneeWIdYCj
     email_attribute_path = email
     enabled = true
     icon = signin
@@ -44,9 +44,9 @@ stringData:
     name_attribute_path = full_name
     role_attribute_path = contains(realm_access.roles[*], 'admin') && 'Admin' || 'Viewer'
     scopes = openid email profile
-    signout_redirect_url = http://$KEYCLOAK_IP/auth/realms/infra/protocol/openid-connect/logout
+    signout_redirect_url = http://$KEYCLOAK_IP/auth/realms/isiGPU/protocol/openid-connect/logout
     tls_skip_verify_insecure = true
-    token_url = http://$KEYCLOAK_IP/auth/realms/infra/protocol/openid-connect/token
+    token_url = http://$KEYCLOAK_IP/auth/realms/isiGPU/protocol/openid-connect/token
     use_refresh_token = true
     [date_formats]
     default_timezone = Asia/Tehran
@@ -59,14 +59,12 @@ stringData:
 type: Opaque
 GRAFANA_CONFIG
 
-
-kubectl apply --server-side -f ../monitoring/manifests/setup
+kubectl apply --server-side -f ./setup
 kubectl wait \
 	--for condition=Established \
 	--all CustomResourceDefinition \
 	--namespace=monitoring
-kubectl apply -f ../monitoring/manifests/
-
+kubectl apply -f .
 
 kubectl apply -f - <<'EOF'
 apiVersion: monitoring.coreos.com/v1
@@ -87,5 +85,8 @@ spec:
     path: /metrics
 EOF
 
-
 kubectl delete NetworkPolicy grafana -n monitoring
+
+kubectl -n monitoring patch svc grafana \
+    --type='merge' \
+    -p '{"metadata": {"annotations": {"lbipam.cilium.io/ips": "'${GRAFANA_IP}'"}}, "spec": {"type": "LoadBalancer"}}'
