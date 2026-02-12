@@ -59,3 +59,4 @@
 #   - registry: 10.0.0.2:5000
 #     username: user
 #     password: pass
+harbor: https://172.16.30.202

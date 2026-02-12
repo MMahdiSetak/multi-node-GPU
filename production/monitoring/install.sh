@@ -27,7 +27,13 @@ metadata:
 stringData:
   grafana.ini: |
     [auth]
-    disable_login_form = false
+    disable_login_form = true
+    [auth.anonymous]
+    enabled = true
+    org_role = Viewer
+    [users]
+    auto_assign_org = true
+    auto_assign_org_role = Viewer
     [auth.generic_oauth]
     allow_sign_up = true
     api_url = http://$KEYCLOAK_IP/auth/realms/isiGPU/protocol/openid-connect/userinfo
@@ -36,7 +42,7 @@ stringData:
     client_id = kubeflow-oidc-authservice
     client_secret = urQd4BnZAmKuPkqoOCB4vlIneeWIdYCj
     email_attribute_path = email
-    enabled = true
+    enabled = false
     icon = signin
     login_attribute_path = username
     login_prompt = login

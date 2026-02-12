@@ -159,5 +159,9 @@ id=$(curl -sk -u "admin:Harbor12345" "https://172.16.30.202/api/v2.0/registries"
 curl -sk -u "admin:Harbor12345" -X POST "https://172.16.30.202/api/v2.0/projects" \
     -H "Content-Type: application/json" -d "{\"project_name\": \"ecr-public-cache\", \"public\": true, \"registry_id\": $id}"
 
-
-# TODO restore from backup if exists
+if [ -d harbor-backups ]; then
+  echo "Restoring from backup..."
+  bash restore.sh
+else
+  echo "No backup found, skipping restore"
+fi

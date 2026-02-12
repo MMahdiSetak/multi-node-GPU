@@ -22,7 +22,8 @@ for PROJECT in "${PROJECTS[@]}"; do
 
   if [ -z "$REPOS" ]; then
     echo "No repositories found in project $PROJECT or access denied."
-    exit 1
+    cd ..
+    continue
   fi
 
   for REPO_FULL in $REPOS; do
