@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-VENVDIR=kubespray-venv
-KUBESPRAYDIR=kubespray
-source $VENVDIR/bin/activate
-cd $KUBESPRAYDIR
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
+VENVDIR=kubespray-venv
+KUBESPRAYDIR=kubespray
+source $VENVDIR/bin/activate
 cd $SCRIPT_DIR/kubespray
 
 ansible-playbook -i inventory/gpu-cluster/inventory.ini reset.yml -b -v \
