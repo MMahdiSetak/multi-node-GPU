@@ -65,10 +65,8 @@ function create_container_image_tar() {
 			sleep 5000
 		done
 		set -e
-		echo inja save mikone
 		echo ${runtime} save -o ${FILE_NAME}  ${image}
 		${runtime} save -o ${FILE_NAME}  ${image}
-		echo save shod
 		# NOTE: Here removes the following repo parts from each image
 		# so that these parts will be replaced with Kubespray.
 		# - kube_image_repo: "registry.k8s.io"

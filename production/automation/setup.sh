@@ -30,12 +30,13 @@ done
 
 echo "Bootstrap completed successfully."
 
-tar Cxzvf /usr/local kubespray/contrib/offline/offline-files/github.com/containerd/containerd/releases/download/v2.1.5/containerd-2.1.5-linux-amd64.tar.gz
-tar Cxzvf . kubespray/contrib/offline/offline-files/github.com/containerd/nerdctl/releases/download/v2.1.6/nerdctl-2.1.6-linux-amd64.tar.gz
+cd kubespray/contrib/offline
+tar Cxzvf /usr/local offline-files/github.com/containerd/containerd/releases/download/v2.1.5/containerd-2.1.5-linux-amd64.tar.gz
+tar Cxzvf . offline-files/github.com/containerd/nerdctl/releases/download/v2.1.6/nerdctl-2.1.6-linux-amd64.tar.gz
 mv nerdctl /usr/local/bin/nerdctl
 sudo ln -s /usr/local/bin/nerdctl /usr/bin/nerdctl
 rm -f containerd-rootless-setuptool.sh containerd-rootless.sh
-tar Cxzvf . kubespray/contrib/offline/offline-files/get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz
+tar Cxzvf . offline-files/get.helm.sh/helm-v3.18.4-linux-amd64.tar.gz
 mv linux-amd64/helm /usr/local/bin/helm
 rm -rf linux-amd64
 
