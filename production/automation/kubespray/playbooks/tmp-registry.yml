@@ -7,6 +7,23 @@
         path: /etc/containerd/certs.d/quay.io
         state: directory
         mode: '0755'
+    
+    - name: Ensure registry certs.d directory exists
+      file:
+        path: /etc/containerd/certs.d/{{ registry_host }}
+        state: directory
+        mode: '0755'
+
+    - name: Configure registry hosts.toml
+      copy:
+        dest: /etc/containerd/certs.d/{{ registry_host }}/hosts.toml
+        mode: '0644'
+        content: |
+          server = "https://{{ registry_host }}"
+
+          [host."http://{{ registry_host }}"]
+            capabilities = ["pull", "resolve"]
+            skip_verify = true
 
     - name: Configure quay.io hosts.toml
       copy:
@@ -15,7 +32,7 @@
         content: |
           server = "https://quay.io"
 
-          [host."http://172.16.30.25:5000"]
+          [host."http://{{ registry_host }}"]
             capabilities = ["pull", "resolve"]
             skip_verify = true
       notify: restart containerd
