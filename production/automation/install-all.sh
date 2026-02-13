@@ -7,7 +7,17 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 set -a
 source "$SCRIPT_DIR/config.env"
 set +a
-cd $SCRIPT_DIR/kubespray
+
+if [ "$SETUP" = "true" ]; then
+  bash ./setup.sh
+fi
+
+cd $SCRIPT_DIR
+
+VENVDIR=kubespray-venv
+KUBESPRAYDIR=kubespray
+source $VENVDIR/bin/activate
+cd $KUBESPRAYDIR
 
 extra_vars=$(cat <<EOF
 registry_host: "$REGISTRY"
@@ -18,7 +28,7 @@ containerd_registries_mirrors:
         capabilities: ["pull", "resolve"]
         skip_verify: true
 files_repo: "$FILES_REPO"
-harbor: "$HARBOR_IP"
+harbor: "https://$HARBOR_IP"
 EOF
 )
 

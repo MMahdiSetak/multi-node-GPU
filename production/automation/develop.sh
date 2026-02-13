@@ -9,7 +9,7 @@ admin ALL=(ALL) NOPASSWD: ALL
 # install ansible
 VENVDIR=kubespray-venv
 KUBESPRAYDIR=kubespray
-python3 -m venv $VENVDIR
+python3.12 -m venv $VENVDIR
 source $VENVDIR/bin/activate
 cd $KUBESPRAYDIR
 pip install -r requirements.txt

@@ -11,6 +11,13 @@ RETRY_COUNT=5
 
 function create_container_image_tar() {
 	set -e
+	export http_proxy=http://127.0.0.1:10808
+	export https_proxy=http://127.0.0.1:10808
+	export all_proxy=socks5://127.0.0.1:10808
+
+	export HTTP_PROXY=http://127.0.0.1:10808
+	export HTTPS_PROXY=http://127.0.0.1:10808
+	export ALL_PROXY=socks5://127.0.0.1:10808
 
 	if [ -z "${IMAGES_FROM_FILE}" ]; then
 		echo "Getting images from current \"$(kubectl config current-context)\""
@@ -45,7 +52,9 @@ function create_container_image_tar() {
 		set +e
 		for step in $(seq 1 ${RETRY_COUNT})
 		do
-			sudo --preserve-env=http_proxy,https_proxy,no_proxy ${runtime} pull ${image}
+			echo ${runtime} pull ${image}
+			${runtime} pull ${image}
+			echo done $?
 			if [ $? -eq 0 ]; then
 				break
 			fi
@@ -53,10 +62,13 @@ function create_container_image_tar() {
 			if [ ${step} -eq ${RETRY_COUNT} ]; then
 				exit 1
 			fi
+			sleep 5000
 		done
 		set -e
-		sudo ${runtime} save -o ${FILE_NAME}  ${image}
-
+		echo inja save mikone
+		echo ${runtime} save -o ${FILE_NAME}  ${image}
+		${runtime} save -o ${FILE_NAME}  ${image}
+		echo save shod
 		# NOTE: Here removes the following repo parts from each image
 		# so that these parts will be replaced with Kubespray.
 		# - kube_image_repo: "registry.k8s.io"
@@ -87,7 +99,7 @@ function create_container_image_tar() {
 }
 
 function register_container_images() {
-	create_registry=false
+	create_registry=true
 	REGISTRY_PORT=${REGISTRY_PORT:-"5000"}
 
 	if [ -z "${DESTINATION_REGISTRY}" ]; then
@@ -139,15 +151,20 @@ function register_container_images() {
 	fi
 
 	while read -r line; do
+		echo "inside the while"
 		file_name=$(echo ${line} | awk '{print $1}')
 		raw_image=$(echo ${line} | awk '{print $2}')
 		new_image="${DESTINATION_REGISTRY}/${raw_image}"
 		load_image=$(sudo ${runtime} load -i ${IMAGE_DIR}/${file_name} | head -n1)
-		org_image=$(echo "${load_image}"  | awk '{print $3}')
+		org_image=$(echo "${load_image}"  | awk '{print $2}')
+		echo "Registering image ${line} to ${DESTINATION_REGISTRY}..."
+		echo "Loading image ${load_image}..."
+		echo "${org_image} -> ${new_image}"
 		# special case for tags containing the digest when using docker or podman as the container runtime
 		if [ "${org_image}" == "ID:" ]; then
 		  org_image=$(echo "${load_image}"  | awk '{print $4}')
 		fi
+		echo "${ray_image} ${org_image}"
 		image_id=$(sudo ${runtime} image inspect --format "{{.Id}}" "${org_image}")
 		if [ -z "${file_name}" ]; then
 			echo "Failed to get file_name for line ${line}"
@@ -165,9 +182,13 @@ function register_container_images() {
 			echo "Failed to get image_id for file ${file_name}"
 			exit 1
 		fi
+		echo "${IMAGE_DIR}/${file_name}"
 		sudo ${runtime} load -i ${IMAGE_DIR}/${file_name}
-		sudo ${runtime} tag  ${image_id} ${new_image}
-		sudo ${runtime} push ${new_image}
+		echo "${new_image}"
+		echo ${org_image}
+		echo ${raw_image}
+		sudo ${runtime} tag ${org_image} ${new_image}
+		sudo ${runtime} push --insecure-registry ${new_image}
 	done <<< "$(cat ${IMAGE_LIST})"
 
 	echo "Succeeded to register container images to local registry."
@@ -189,6 +210,8 @@ else
     echo "No supported container runtime found"
     exit 1
 fi
+runtime="nerdctl"
+echo "$runtime"
 
 if [ "${OPTION}" == "create" ]; then
 	create_container_image_tar
