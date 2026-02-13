@@ -1,11 +1,11 @@
 ---
 # Global Offline settings
 ## Private Container Image Registry
-registry_host: "worker-g02:5000"
+registry_host: "172.16.30.24:5000"
 containerd_registries_mirrors:
-  - prefix: "worker-g02:5000"
+  - prefix: "172.16.30.24:5000"
     mirrors:
-      - host: "http://worker-g02:5000"
+      - host: "http://172.16.30.24:5000"
         capabilities: ["pull", "resolve"]
         skip_verify: true
 
