@@ -135,7 +135,7 @@ function register_container_images() {
 		exit 1
 	fi
 
-	tar -zxvf ${IMAGE_TAR_FILE}
+	# tar -zxvf ${IMAGE_TAR_FILE}
 
 	if ${create_registry}; then
 		sudo ${runtime} load -i ${IMAGE_DIR}/registry-latest.tar
@@ -149,7 +149,6 @@ function register_container_images() {
 	fi
 
 	while read -r line; do
-		echo "inside the while"
 		file_name=$(echo ${line} | awk '{print $1}')
 		raw_image=$(echo ${line} | awk '{print $2}')
 		new_image="${DESTINATION_REGISTRY}/${raw_image}"

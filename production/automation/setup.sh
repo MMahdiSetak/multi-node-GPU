@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 INVENTORY="kubespray/inventory/gpu-cluster/inventory.ini"
 
 # Ensure ssh key exists
@@ -29,6 +29,7 @@ for HOST in $HOSTS; do
 done
 
 echo "Bootstrap completed successfully."
+set +e
 
 cd kubespray/contrib/offline
 tar Cxzvf /usr/local offline-files/github.com/containerd/containerd/releases/download/v2.1.5/containerd-2.1.5-linux-amd64.tar.gz
