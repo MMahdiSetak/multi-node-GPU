@@ -50,15 +50,15 @@ kubectl taint node master node-role.kubernetes.io/control-plane:NoSchedule-
 ansible-playbook -i inventory/gpu-cluster/inventory.ini playbooks/tmp-registry.yml -b -v
 
 cd $ROOT_DIR/LB
-echo "▶ installing LB"
+printf "\n▶ installing LB\n"
 bash ./apply-lbippool.sh
 
 cd $ROOT_DIR/csi/rook-ceph
-echo "▶ installing ceph"
+printf "\n▶ installing ceph\n"
 bash ./install.sh
 
 cd $ROOT_DIR/harbor
-echo "▶ installing harbor"
+printf "\n▶ installing harbor\n"
 bash ./install.sh
 
 cd $SCRIPT_DIR/kubespray
@@ -66,17 +66,21 @@ ansible-playbook -i inventory/gpu-cluster/inventory.ini playbooks/main-registry.
     -e "$extra_vars" \
 
 cd $ROOT_DIR/keycloak
-echo "▶ installing keycloak"
+printf "\n▶ installing keycloak\n"
 bash ./install.sh
 
 cd $ROOT_DIR/monitoring
-echo "▶ installing monitoring"
+printf "\n▶ installing monitoring\n"
 bash ./install.sh
 
 cd $ROOT_DIR/gpu-operator
-echo "▶ installing gpu-operator"
+printf "\n▶ installing gpu-operator\n"
 bash ./install.sh
 
 cd $ROOT_DIR/kubeflow
-echo "▶ installing kubeflow"
+printf "\n▶ installing kubeflow\n"
+bash ./install.sh
+
+cd $ROOT_DIR/kubecost
+printf "\n▶ installing kubecost\n"
 bash ./install.sh
